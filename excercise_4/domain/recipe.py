@@ -71,6 +71,5 @@ class Recipe(object):
                 else:
                     res = res + util.get_utf8_string(attr)+"\t"
             except AttributeError as a:
-                print a
                 continue
         return res

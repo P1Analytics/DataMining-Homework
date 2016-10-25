@@ -52,12 +52,12 @@ def store_information(recipes_dic):
 
                 # dietary inf
                 getting = "dietary inf"
-                diet_inf = []
+                diet_inf = ""
                 try:
                     dietary_div = soup.find("div", class_="recipe-metadata__dietary")
                     dietaries = dietary_div.find_all("a")
                     for dietary in dietaries:
-                        diet_inf.append(str(dietary.find("p").contents[0]).strip())
+                        diet_inf+=str(dietary.find("p").contents[0]).strip()+" "
                 except:
                     pass
                 recipe.diet_inf = diet_inf
@@ -72,7 +72,18 @@ def store_information(recipes_dic):
                     sub_recipe_name = sub_recipe_list_h3[i].contents[0]
                     sub_recipe_ingr = []
                     for ingredient_li in sub_recipe_ingr_ul[i].find_all("li"):
-                        sub_recipe_ingr.append(ingredient_li.contents[0].strip())
+
+                        # an li tag can contains: "p1"<a href....>"p2"</a>"p3" --> our final string must be "p1 p2 p3 .."
+                        plaintext_ingredient = ""
+                        for ingredient_part_of_li in ingredient_li.contents:
+                            if isinstance(ingredient_part_of_li, basestring):
+                                # row txt
+                                plaintext_ingredient += ingredient_part_of_li.strip()+" "
+                            else:
+                                # link --> get content
+                                 plaintext_ingredient += ingredient_part_of_li.contents[0]
+
+                        sub_recipe_ingr.append(plaintext_ingredient)
                     ingredients[sub_recipe_name] = sub_recipe_ingr
                 recipe.ingredients = ingredients
 

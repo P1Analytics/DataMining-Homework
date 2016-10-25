@@ -43,10 +43,16 @@ def saveRecipe(recipe, keep_open = True, flush_after = 180):
         file_kept_open = data_file
 
 
-def read():
+def read(max=None):
+    num_recipe_read = 0
+    stop_read = max is not None and isinstance(max, int)
     data_file = open(getDataFilePath(recipe_file_data), "r")
     res = {}
     for line in data_file.readlines():
+        num_recipe_read += 1
+        if stop_read and num_recipe_read > max:
+            return res
+
         i = 0;
         recipe_dic = {}
 
@@ -77,7 +83,7 @@ def save_error_pages(**error_pages):
 
     err_file = io.FileIO(getDataFilePath(error_pages_data), "w")
     for link, recipe in error_pages.iteritems():
-        err_file.write(link+"\t"+recipe.title)
+        err_file.write(link+"\t"+recipe.title+"\n")
     err_file.close()
 
 def close_open_file():

@@ -12,8 +12,6 @@ import excercise_4.data.data_manager as data_manager
 
 def on_start_up():
     recipes_dic = data_manager.read()
-    for k,v in recipes_dic.iteritems():
-        print v.method
     print len(recipes_dic), " reicpes"
 
 def main():
@@ -35,5 +33,10 @@ def main():
         else:
             user_input = raw_input("You can tape either 1, 2, or exit(): ")
 
+def doMyTest():
+    recipes_dic = download_recipes.start()
+    preprocess_recipes.start(**recipes_dic)
+
 if __name__ == "__main__":
-    main()
+    doMyTest()
+    # main()
