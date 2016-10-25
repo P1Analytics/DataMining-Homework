@@ -34,25 +34,6 @@ class Recipe(object):
                 setattr(self, feature, method)
             else:
                 setattr(self, feature, value)
-    ''' try do define a smarter constructor
-    def __init__(self,title,link,
-                 author,
-                 prep_time,
-                 cook_time,
-                 num_people_serves,
-                 diet_inf,
-                 ingredients,
-                 method):
-        self.title=title
-        self.link=link
-        self.author=author,
-        self.prep_time=prep_time,
-        self.cook_time=cook_time,
-        self.num_people_serves=num_people_serves,
-        self.diet_inf=diet_inf,
-        self.ingredients=ingredients,
-        self.method=method
-    '''
 
     def __str__(self):
         res = ""

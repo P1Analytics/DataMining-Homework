@@ -44,7 +44,7 @@ def get_recipe_link(all_recipes_link_list=[], search_by_keyword=True, cache=True
             for line in data_read:
                 recipe_title = line[0]
                 recipe_link = line[1]
-                recipe_links_dic[recipe_link] = recipe.Recipe(recipe_title, recipe_link)
+                recipe_links_dic[recipe_link] = recipe.R10ecipe(recipe_title, recipe_link)
             if len(recipe_links_dic) != 0:
                 return recipe_links_dic
         else:
