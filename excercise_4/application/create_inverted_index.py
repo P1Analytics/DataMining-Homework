@@ -6,6 +6,8 @@ from collections import defaultdict
 from excercise_4.data import data_manager
 from excercise_4.util import util
 
+import sys
+
 features = ["title","link", "author", "prep_time", "cook_time", "num_people_serves", "diet_inf", "ingredients", "method"]
 english_stemmer = EnglishStemmer()
 stopwords       = nltk.corpus.stopwords.words('english')
@@ -25,9 +27,10 @@ def start(**recipes_dic):
             return -1
 
         # Docuement frequencies --> in how many recipes a term
-        for k,v in index.iteritems():
-            print "term: ",k, " > Df: ", len(v), v
-
+        # for k,v in index.iteritems():
+        #     print "term: ",k, " > Df: ", len(v), v
+    for k,v in index.iteritems():
+        print k, v
 
 
 def add(recipe):
@@ -62,24 +65,12 @@ def add(recipe):
                     continue
                 token = english_stemmer.stem(token)
                 tokens_to_count.append(token)
-
-                indexed_recipes_for_term = []
-                for id in index[token]:
-                    indexed_recipes_for_term.append(id[0])
-
-                if unique_id not in indexed_recipes_for_term:
-                    index[token].append([unique_id, 1])
-                else:
-                    pair_index = indexed_recipes_for_term.index(unique_id)
-                    cnt = index[token][pair_index][1] + 1
-                    index[token][pair_index][1] = cnt
         except Exception as e:
             print e
             print "*WARNING*"+feature
             return -1
-
-    #for token, frequence in nltk.FreqDist(tokens_to_count).iteritems():
-    #    print token, frequence, index[token]
+    for token, frequence in nltk.FreqDist(tokens_to_count).iteritems():
+        index[token].append([unique_id, frequence])
 
     recipes[unique_id] = recipe
     unique_id = unique_id + 1
