@@ -46,7 +46,7 @@ def saveRecipe(recipe, keep_open = True, flush_after = 180):
         file_kept_open = data_file
 
 
-def read_inverted_index(name="InvertedIndex"):
+def read_inverted_index(name="InvertedIndex", **recipes_dic):
     '''
 
     :param name: name of the inverted index to read from memory
@@ -64,8 +64,10 @@ def read_inverted_index(name="InvertedIndex"):
         data_file = open(getDataFilePath(index_file_name), "r")
         for line in data_file.readlines():
             term = line.split(" ")[0]
+            term_idf = float(line.split(" ")[1])
             postings = []
-            for p in line.split(" ")[1][1:-2].split("]["):
+            postings.append(term_idf)
+            for p in line.split(" ")[2][1:-2].split("]["):
                 postings.append(map(int, p.split(",")))
             index.add(term, postings)
         data_file.close()
@@ -79,13 +81,14 @@ def read_inverted_index(name="InvertedIndex"):
         data_file = open(getDataFilePath(recipes_file_name), "r")
         for line in data_file.readlines():
             id = int(line.split(" ")[0])
-            link = line.split(" ")[1][:-1]      # doesn't read the last character '\n'
-            index.add(id, link, False)
+            link = line.split(" ")[1].split(",")[0]
+            length = float(line.split(" ")[1].split(",")[1][:-1])     # doesn't read the last character '\n'
+            index.add(id, [recipes_dic[link], length], False)
         data_file.close()
 
         print "\tInverted index [ named " + name + " ] correctly read"
     except Exception as e:
-        print "*ERROR* at data_manager.save_inverted_index", e,"Impossible to write the index on disk"
+        print "*ERROR* at data_manager.read_inverted_index [", e,"] Impossible to read the index from disk"
         return -1, None
     return 0, index
 
@@ -107,7 +110,10 @@ def save_inverted_index(index):
         for term, posting_list in index.iteritems():
             row = term + " "
             for posting in posting_list:
-                row += "["+str(posting[0])+","+str(posting[1])+"]"        # [ doc_id , term_frequency ]
+                try:
+                    row += "["+str(posting[0])+","+str(posting[1])+"]"        # [ doc_id , term_frequency ]
+                except Exception:
+                    row += str(posting)+" "     # posting corresponds to the idf of the term
             row += "\n"
             data_file.write(util.get_utf8_string(row))
         data_file.close()
@@ -120,17 +126,17 @@ def save_inverted_index(index):
 
         data_file = open(getDataFilePath(recipes_file_name), "w")
         for id, recipe in index.recipes_iteritems():
-            row = str(id) + " " + recipe.link + "\n"
+            row = str(id) + " " + recipe[0].link + "," + str(recipe[1]) + "\n"      # recipe is composed by the link + plus its length
             data_file.write(util.get_utf8_string(row))
         data_file.close()
 
     except Exception as e:
-        print "*ERROR* at data_manager.save_inverted_index", e,"Impossible to write the index on disk"
+        print "*ERROR* at data_manager.save_inverted_index [", e,"] Impossible to write the index on disk"
         return -1
     return 0
 
 
-def read(max=None):
+def read(max = None):
     '''
 
     :param max: max number of entry you want to read
@@ -143,7 +149,7 @@ def read(max=None):
     for line in data_file.readlines():
         num_recipe_read += 1
         if stop_read and num_recipe_read > max:
-            return diz
+            return 0, diz
         i = 0;
         recipe_dic = {}
         for elem in line.split('\t'):
