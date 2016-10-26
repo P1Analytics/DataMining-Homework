@@ -9,7 +9,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import excercise_4.application.download_recipes as download_recipes
 import excercise_4.application.preprocess_recipes as preprocess_recipes
 import excercise_4.application.create_inverted_index as create_inverted_index
-import excercise_4.application.vector_space_model as vector_space_model
 import excercise_4.data.data_manager as data_manager
 
 global recipes_dic
@@ -55,7 +54,9 @@ def doMyTest():
     res, recipes_dic = data_manager.read(10)
     create_inverted_index.start(True, "index_10", True, **recipes_dic)
     res, index = data_manager.read_inverted_index("index_10", **recipes_dic)
-    vector_space_model.create_space(index)
+    index.create_vector_space()
+    data_manager.save_inverted_index(index)
+    #print index.bag_of_words
 
 if __name__ == "__main__":
     doMyTest()

@@ -93,6 +93,7 @@ class InvertedIndex(object):
     def create_vector_space(self):
         vector = {}
         i = 0
+        # TODO save the vecotr to the disk (term, id)
         for k, v in self.iteritems():
             vector[k] = i
             i = i + 1
@@ -118,5 +119,5 @@ class InvertedIndex(object):
             for term, tfidf in tfidf_terms.iteritems():
                 self.bag_of_words[recipe_id][term] = tfidf / len
 
-        for k, v in self.bag_of_words:
+        for k, v in self.bag_of_words.iteritems():
             print k, v

@@ -13,6 +13,7 @@ recipe_features = ["title","link", "author", "prep_time", "cook_time", "num_peop
 recipe_file_data = "recipe_file_data.tsv"
 error_pages_data = "error_pages_data.tsv"
 index_file_data = "index_file_data.tsv"
+bow_file_data = "bow_file_data.tsv"     # bag of words
 
 # data needed to keep open file in writing
 global file_kept_open
@@ -101,6 +102,7 @@ def save_inverted_index(index):
     '''
     try:
         print "Saving inverted index [ "+index.name+" ] on disk"
+
         print "\t1. Saving the index"
         index_file_name = index.name+"__"+index_file_data
         if not existsDataFile(index_file_name):
@@ -129,6 +131,21 @@ def save_inverted_index(index):
             row = str(id) + " " + recipe[0].link + "," + str(recipe[1]) + "\n"      # recipe is composed by the link + plus its length
             data_file.write(util.get_utf8_string(row))
         data_file.close()
+
+        print "\t3. Saving the bag of words, vector space model"
+        bow_file_name = index.name + "__" + bow_file_data
+        if not existsDataFile(bow_file_name):
+            io.FileIO(getDataFilePath(bow_file_name), "w").close()
+
+        data_file = open(getDataFilePath(bow_file_name), "w")
+        for recipe_id, bag_of_words in index.bag_of_words.iteritems():
+            row = recipe_id+" "
+            for term_id, tfidf_term in bag_of_words.iteritems():
+                row += term_id+":"+tfidf_term+","
+            row += "\n"
+            data_file.write(util.get_utf8_string(row))
+        data_file.close()
+
 
     except Exception as e:
         print "*ERROR* at data_manager.save_inverted_index [", e,"] Impossible to write the index on disk"
