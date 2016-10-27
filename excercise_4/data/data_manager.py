@@ -84,9 +84,8 @@ def read_inverted_index(name="InvertedIndex", **recipes_dic):
         data_file = open(getDataFilePath(recipes_file_name), "r")
         for line in data_file.readlines():
             id = int(line.split(" ")[0])
-            link = line.split(" ")[1].split(",")[0]
-            length = float(line.split(" ")[1].split(",")[1][:-1])     # doesn't read the last character '\n'
-            index.add(id, [recipes_dic[link], length], False)
+            link = line.split(" ")[1][:-1]      # doesn't read the last character '\n'
+            index.add(id, recipes_dic[link], False)
         data_file.close()
 
         print "\t3. Reading the bag of words, vector space.."
@@ -141,7 +140,7 @@ def save_inverted_index(index):
 
         data_file = open(getDataFilePath(recipes_file_name), "w")
         for id, recipe in index.recipes_iteritems():
-            row = str(id) + " " + recipe[0].link + "," + str(recipe[1]) + "\n"      # recipe is composed by the link + plus its length
+            row = str(id) + " " + recipe.link + "\n"      # recipe is composed by the link + plus its length
             data_file.write(util.get_utf8_string(row))
         data_file.close()
 

@@ -25,6 +25,14 @@ class InvertedIndex(object):
     def recipes_iteritems(self):
         return self.recipes.iteritems()
 
+    def look_for(self, term):
+        term = self.english_stemmer.stem(term)
+        for posting in self.index[term][1:]:
+            recipe_id = posting[0]
+            tfidf = self.vector_space.get_recipe_term_tfidf(recipe_id, term)
+            link = self.recipes[posting[0]].link
+            print recipe_id, tfidf, link
+
     def add(self, key, value, is_posting = True):
         '''
 
@@ -77,7 +85,7 @@ class InvertedIndex(object):
             self.index[token].append([self.unique_id, frequence])
 
 
-        self.recipes[self.unique_id] = [recipe, 0]
+        self.recipes[self.unique_id] = recipe
         self.unique_id = self.unique_id + 1
         return 0
 
@@ -103,9 +111,17 @@ class VectorSpace(object):
     def set_term_id(self, term, term_id):
         self.term_id[term] = term_id
 
+    def get_term_id(self, term):
+        return self.term_id[term]
+
     def add_entry_to_vector(self, recipe_id, term, normalized_tfidf):
         self.bag_of_words[recipe_id][term] = normalized_tfidf
         pass
+
+    def get_recipe_term_tfidf(self, recipe_id, term):
+        term_id = self.get_term_id(term)
+        return self.bag_of_words[recipe_id][term_id]
+
 
     def create(self, index):
         print "\t\tIndex > VectorSpace :: start creating"
