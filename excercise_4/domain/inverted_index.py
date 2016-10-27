@@ -15,10 +15,9 @@ class InvertedIndex(object):
         self.stopwords = nltk.corpus.stopwords.words('english')
         self.stopwords.append(",")
         self.index = defaultdict(list)
-        self.unique_id = int(0)
+        self.unique_id = int(0)     # counter that represents an id, to identificate a recipe
         self.recipes = {}
-        self.term_df = {}
-        self.bag_of_words = defaultdict(dict)       # see a recipe as a bag of words (stemmed and without stopwords)
+        self.vector_space = VectorSpace()
 
     def iteritems(self):
         return self.index.iteritems()
@@ -84,21 +83,40 @@ class InvertedIndex(object):
 
     def compute_term_document_frequencies(self):
         num_recipes = len(self.recipes)
-        print num_recipes
         for term, posting_list in self.index.iteritems():
+            # compute the idf of a term
             df = len(posting_list)
             idf = math.log(float(num_recipes)/float(df), 10)
             self.index[term].insert(0, idf)
 
     def create_vector_space(self):
-        vector = {}
-        i = 0
-        # TODO save the vecotr to the disk (term, id)
-        for k, v in self.iteritems():
-            vector[k] = i
-            i = i + 1
+        self.vector_space.create(self)
 
-        for term, posting_list in self.iteritems():
+    def bag_of_words_iteritems(self):
+        return self.vector_space.bag_of_words.iteritems()
+
+class VectorSpace(object):
+    def __init__(self):
+        self.bag_of_words = defaultdict(dict)  # see a recipe as a bag of words (stemmed and without stopwords)
+        self.term_id = {}  # used in the vecotr space model --> identifier of a term
+
+    def set_term_id(self, term, term_id):
+        self.term_id[term] = term_id
+
+    def add_entry_to_vector(self, recipe_id, term, normalized_tfidf):
+        self.bag_of_words[recipe_id][term] = normalized_tfidf
+        pass
+
+    def create(self, index):
+        print "\t\tIndex > VectorSpace :: start creating"
+        term_id = 0
+        for term, posting_list in index.iteritems():
+            print "\t\t\tComputing term "+term+" > assign it the id "+str(term_id)
+            # assign an id to a term --> used in the VSM
+            self.term_id[term] = term_id
+            term_id += 1
+
+            # compute tf-idf for every entry in our space
             idf = 0.
             for posting in posting_list:
                 try:
@@ -106,18 +124,20 @@ class InvertedIndex(object):
                     tf = posting[1]
                     if self.bag_of_words[recipe_id] is None:
                         self.bag_of_words[recipe_id] = {}
-                    self.bag_of_words[recipe_id][vector[term]] = tf * idf
+                    self.bag_of_words[recipe_id][self.term_id[term]] = tf * idf
                 except Exception:
                     idf = posting
 
+        # The real "vector" that represents a recipe is created, as a bag of tf-idf
+        # --> we consider only the entry where tf-idf is not equal to 0
         for recipe_id, tfidf_terms in self.bag_of_words.iteritems():
+            print "\t\t\tNormalize the the vector that corresponds to the recipe "+str(recipe_id)
+            # compute lenght of a recipe
             len = 0.
             for term, tfidf in tfidf_terms.iteritems():
                 len = len + (tfidf * tfidf)
             len = math.sqrt(len)
 
+            # normalize the recipe vector
             for term, tfidf in tfidf_terms.iteritems():
-                self.bag_of_words[recipe_id][term] = tfidf / len
-
-        for k, v in self.bag_of_words.iteritems():
-            print k, v
+                self.add_entry_to_vector(recipe_id, term, tfidf/len)

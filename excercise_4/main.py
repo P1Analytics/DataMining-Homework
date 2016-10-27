@@ -51,11 +51,12 @@ def main():
             user_input = raw_input("You can tape either 1, 2, or exit(): what's your choice? ")
 
 def doMyTest():
-    res, recipes_dic = data_manager.read(10)
-    create_inverted_index.start(True, "index_10", True, **recipes_dic)
-    res, index = data_manager.read_inverted_index("index_10", **recipes_dic)
-    index.create_vector_space()
-    data_manager.save_inverted_index(index)
+    res, recipes_dic = data_manager.read()
+    #create_inverted_index.start(True, "index_10", True, **recipes_dic)
+    res, index = data_manager.read_inverted_index(**recipes_dic)
+    for k,v in index.bag_of_words_iteritems():
+        print k,v
+    # data_manager.save_inverted_index(index)
     #print index.bag_of_words
 
 if __name__ == "__main__":

@@ -64,13 +64,15 @@ def read_inverted_index(name="InvertedIndex", **recipes_dic):
         index = InvertedIndex(name)
         data_file = open(getDataFilePath(index_file_name), "r")
         for line in data_file.readlines():
-            term = line.split(" ")[0]
-            term_idf = float(line.split(" ")[1])
+            term_id = line.split(" ")[0]
+            term = line.split(" ")[1]
+            term_idf = float(line.split(" ")[2])
             postings = []
             postings.append(term_idf)
-            for p in line.split(" ")[2][1:-2].split("]["):
+            for p in line.split(" ")[3][1:-2].split("]["):
                 postings.append(map(int, p.split(",")))
             index.add(term, postings)
+            index.vector_space.set_term_id(term, term_id)
         data_file.close()
 
         print "\t2. Reading the recipe id.."
@@ -85,6 +87,17 @@ def read_inverted_index(name="InvertedIndex", **recipes_dic):
             link = line.split(" ")[1].split(",")[0]
             length = float(line.split(" ")[1].split(",")[1][:-1])     # doesn't read the last character '\n'
             index.add(id, [recipes_dic[link], length], False)
+        data_file.close()
+
+        print "\t3. Reading the bag of words, vector space.."
+        index_bow_file = name + "__" + bow_file_data
+        data_file = open(getDataFilePath(index_bow_file), "r")
+        for line in data_file.readlines():
+            recipe_id = int(line.split(" ")[0])
+            for term_tfidf in line.split(" ")[1][:-2].split(","):       # [:-2] --> we doesn't consider the last two characters (".... ,\n")
+                term = term_tfidf.split(":")[0]
+                normalized_tfidf = term_tfidf.split(":")[1]
+                index.vector_space.add_entry_to_vector(recipe_id, term, normalized_tfidf)
         data_file.close()
 
         print "\tInverted index [ named " + name + " ] correctly read"
@@ -110,7 +123,7 @@ def save_inverted_index(index):
 
         data_file = open(getDataFilePath(index_file_name), "w")
         for term, posting_list in index.iteritems():
-            row = term + " "
+            row = str(index.vector_space.term_id[term])+" "+term + " "
             for posting in posting_list:
                 try:
                     row += "["+str(posting[0])+","+str(posting[1])+"]"        # [ doc_id , term_frequency ]
@@ -138,10 +151,10 @@ def save_inverted_index(index):
             io.FileIO(getDataFilePath(bow_file_name), "w").close()
 
         data_file = open(getDataFilePath(bow_file_name), "w")
-        for recipe_id, bag_of_words in index.bag_of_words.iteritems():
-            row = recipe_id+" "
+        for recipe_id, bag_of_words in index.bag_of_words_iteritems():
+            row = str(recipe_id)+" "
             for term_id, tfidf_term in bag_of_words.iteritems():
-                row += term_id+":"+tfidf_term+","
+                row += str(term_id)+":"+str(tfidf_term)+","
             row += "\n"
             data_file.write(util.get_utf8_string(row))
         data_file.close()
