@@ -7,11 +7,13 @@ from nltk.stem.snowball import EnglishStemmer
 from collections import defaultdict
 from excercise_4.util import util
 
+std_features = ["title", "link", "author", "prep_time", "cook_time", "num_people_serves", "diet_inf", "ingredients", "method"]
+
 class InvertedIndex(object):
 
-    def __init__(self, name):
+    def __init__(self, name, features=std_features):
         self.name = name
-        self.features = ["title", "link", "author", "prep_time", "cook_time", "num_people_serves", "diet_inf", "ingredients", "method"]
+        self.features = features
         self.english_stemmer = EnglishStemmer()
         self.stopwords = nltk.corpus.stopwords.words('english')
         self.stopwords.append(",")
@@ -88,6 +90,7 @@ class InvertedIndex(object):
             result_list[recipe_id] = float(tfidf)
 
     def and_query(self, query, k=10):
+        print "\tComputing AND query for: "+query
         heap_len_postings = []
 
         # tokenization of the query
@@ -165,7 +168,7 @@ class InvertedIndex(object):
         :param recipe: object Recipe to add to the inverted index
         :return: 0 recipe add correctly, -1 in case of error
         '''
-        print "\tAdding recipe to the inverted index " + recipe.link
+        print "\tAdding recipe to the inverted index ["+self.name+"] " + recipe.link
 
         tokens_to_count = []
         for feature in self.features:

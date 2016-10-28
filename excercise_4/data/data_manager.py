@@ -47,7 +47,7 @@ def saveRecipe(recipe, keep_open = True, flush_after = 180):
         file_kept_open = data_file
 
 
-def read_inverted_index(name="InvertedIndex", **recipes_dic):
+def read_inverted_index(recipes_dic, name="InvertedIndex"):
     '''
 
     :param name: name of the inverted index to read from memory
