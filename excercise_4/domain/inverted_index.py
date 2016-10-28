@@ -2,6 +2,7 @@
 
 import nltk
 import math
+import heapq
 from nltk.stem.snowball import EnglishStemmer
 from collections import defaultdict
 from excercise_4.util import util
@@ -25,13 +26,34 @@ class InvertedIndex(object):
     def recipes_iteritems(self):
         return self.recipes.iteritems()
 
-    def look_for(self, term):
-        term = self.english_stemmer.stem(term)
-        for posting in self.index[term][1:]:
-            recipe_id = posting[0]
-            tfidf = self.vector_space.get_recipe_term_tfidf(recipe_id, term)
-            link = self.recipes[posting[0]].link
-            print recipe_id, tfidf, link
+    def look_for(self, query, k = 10):
+
+        result_list = {}
+
+        # tokenization of the query
+        for term in {t.lower() for t in nltk.word_tokenize(query)}:
+            # delete stopwrods from the query
+            if term in self.stopwords:
+                continue
+            # stemming the token
+            term = self.english_stemmer.stem(term)
+            for posting in self.index[term][1:]:
+                recipe_id = posting[0]
+                tfidf = self.vector_space.get_recipe_term_tfidf(recipe_id, term)
+                try:
+                    result_list[recipe_id] = float(result_list[recipe_id]) + float(tfidf)
+                except KeyError:
+                    result_list[recipe_id] = float(tfidf)
+
+        h = []
+        for recipe_id, tfidf in result_list.iteritems():
+            heapq.heappush(h, (tfidf, recipe_id))
+
+        for t in heapq.nlargest(k, h):
+            recipe_id = t[1]
+            tfidf = t[0]
+            print recipe_id, tfidf, self.recipes[recipe_id].link
+
 
     def add(self, key, value, is_posting = True):
         '''
