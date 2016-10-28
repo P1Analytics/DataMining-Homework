@@ -55,7 +55,8 @@ def doMyTest():
     res, recipes_dic = data_manager.read()
     #create_inverted_index.start(**recipes_dic)
     res, index = data_manager.read_inverted_index(**recipes_dic)
-    index.look_for("yogurt Shakshuka")
+    # index.look_for("yogurt Shakshuka")
+    index.and_query("cheese focaccia")
 
 
 if __name__ == "__main__":
