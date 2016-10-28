@@ -27,8 +27,16 @@ class InvertedIndex(object):
         return self.recipes.iteritems()
 
     def look_for(self, query, k=10, recipes_filter=None):
+        '''
 
-        result_list = {}
+        :param query:
+        :param k: parameter to set the max number to retrieve
+        :param recipes_filter: subset of recipes to compute the similarity
+        :return: the ranked result of recipe id
+        '''
+
+        # key: recipe_id , value: cos similarity wrt the query
+        result_diz = {}
 
         # tokenization of the query
         for term in {t.lower() for t in nltk.word_tokenize(query)}:
@@ -41,31 +49,45 @@ class InvertedIndex(object):
             if recipes_filter is None:
                 for posting in self.index[term][1:]:
                     recipe_id = posting[0]
-                    tfidf = self.vector_space.get_recipe_term_tfidf(recipe_id, term)
-                    try:
-                        result_list[recipe_id] = float(result_list[recipe_id]) + float(tfidf)
-                    except KeyError:
-                        result_list[recipe_id] = float(tfidf)
+                    self.compute_term_dot_prod(recipe_id, result_diz, term)
             else:
+                # compute the dot product only for the recipe in the list passed as a parameter
                 for recipe_id in recipes_filter:
-                    tfidf = self.vector_space.get_recipe_term_tfidf(recipe_id, term)
-                    try:
-                        result_list[recipe_id] = float(result_list[recipe_id]) + float(tfidf)
-                    except KeyError:
-                        result_list[recipe_id] = float(tfidf)
+                    self.compute_term_dot_prod(recipe_id, result_diz, term)
 
+        # rank the result
+        return self.rank_result(k, result_diz)
+
+
+    def rank_result(self, k, recipe_similarity):
+        '''
+
+        :param k: get top k result
+        :param recipe_similarity:
+        :return: the ranked top k elements, more similar to the query asked
+        '''
         top_k_heap = []
-        for recipe_id, tfidf in result_list.iteritems():
-            heapq.heappush(top_k_heap, (tfidf, recipe_id))
+        for recipe_id, similarity in recipe_similarity.iteritems():
+            heapq.heappush(top_k_heap, (similarity, recipe_id))
 
-        for t in heapq.nlargest(k, top_k_heap):
-            recipe_id = t[1]
-            tfidf = t[0]
-            print recipe_id, tfidf, self.recipes[recipe_id].link
+        ranked_res = []
+        # order from the largest (MAX similarity) to the smallest (MIN sim.) and get the first K items
+        for sim_recipe_tuple in heapq.nlargest(k, top_k_heap):
+            recipe_id = sim_recipe_tuple[1]
+            similarity = sim_recipe_tuple[0]
+            ranked_res.append((recipe_id, similarity))
+
+        return ranked_res
+
+
+    def compute_term_dot_prod(self, recipe_id, result_list, term):
+        tfidf = self.vector_space.get_recipe_term_tfidf(recipe_id, term)
+        try:
+            result_list[recipe_id] = float(result_list[recipe_id]) + float(tfidf)
+        except KeyError:
+            result_list[recipe_id] = float(tfidf)
 
     def and_query(self, query, k=10):
-
-        postings_list = {}
         heap_len_postings = []
 
         # tokenization of the query
@@ -82,7 +104,7 @@ class InvertedIndex(object):
         ordered_term = heapq.nsmallest(k, heap_len_postings)
         if len(ordered_term) <= 1:
             # query with only one term --> nothing to AND
-            self.look_for(query, k)
+            return self.look_for(query, k)
         else:
             # first term with the smallest posting list (that is also the maximum result achievable within intersection)
             curr_term = ordered_term[0][1]
@@ -97,8 +119,7 @@ class InvertedIndex(object):
                 posting_to_compare = self.index[ordered_term[i][1]][1:]
                 res = self.merge(res, posting_to_compare)
                 i=i+1
-
-            self.look_for(query, k, res)
+            return self.look_for(query, k, res)
 
 
     def merge(self, postings_1, postings_2):
@@ -117,13 +138,13 @@ class InvertedIndex(object):
             if curr_recipe_id1==curr_recipe_id2:
                 # match found --> add this recipe_in in the final result
                 res.append(curr_recipe_id1)
+                # increment both index
                 index_1 += 1
                 index_2 += 1
             elif curr_recipe_id1 < curr_recipe_id2:
                 index_1 += 1
             else:
                 index_2 += 1
-
         return res
 
     def add(self, key, value, is_posting = True):
