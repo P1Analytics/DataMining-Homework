@@ -33,6 +33,7 @@ def main():
     print "\t1) Downlaod recipes"
     print "\t2) Preprocess recipes"
     print "\t3) Create the inverted index"
+    print "\t4) Query the index"
     print "\teixt() to close the application"
     user_input = raw_input("What's yout choice? ")
     while True:
@@ -52,12 +53,10 @@ def main():
 
 def doMyTest():
     res, recipes_dic = data_manager.read()
-    #create_inverted_index.start(True, "index_10", True, **recipes_dic)
+    #create_inverted_index.start(**recipes_dic)
     res, index = data_manager.read_inverted_index(**recipes_dic)
-    for k,v in index.bag_of_words_iteritems():
-        print k,v
-    # data_manager.save_inverted_index(index)
-    #print index.bag_of_words
+    index.look_for("yogurt Shakshuka")
+
 
 if __name__ == "__main__":
     doMyTest()
