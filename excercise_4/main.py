@@ -2,6 +2,8 @@
 
 import sys
 import os.path
+import heapq
+import operator
 
 # make the code run under a console
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -20,7 +22,7 @@ def on_start_up():
     print "******************************"
     print "Starting up the application...\n"
     res, recipes_dic = data_manager.read()
-    res, index = data_manager.read_inverted_index(**recipes_dic)
+    res, index = data_manager.read_inverted_index(recipes_dic)
     print "\nStart up copleted!!"
     print "******************************\n\n\n"
 
@@ -41,21 +43,45 @@ def main():
             recipes_dic = download_recipes.start()
             break
         elif user_input == "2":
-            preprocess_recipes.start(**recipes_dic)
+            preprocess_recipes.start(recipes_dic)
             break
         elif user_input == "3":
-            create_inverted_index.start(**recipes_dic)
+            create_inverted_index.start(recipes_dic)
             break
         elif user_input == "exit()":
             break
         else:
-            user_input = raw_input("You can tape either 1, 2, or exit(): what's your choice? ")
+            user_input = raw_input("You can tape either 1, 2, 3, or exit(): what's your choice? ")
 
 def doMyTest():
     res, recipes_dic = data_manager.read()
-    #create_inverted_index.start(**recipes_dic)
-    res, index = data_manager.read_inverted_index(**recipes_dic)
-    index.look_for("yogurt Shakshuka")
+    res, ing = data_manager.read_inverted_index(recipes_dic, "index_ingredients")
+    res, met = data_manager.read_inverted_index(recipes_dic, "index_method")
+    res, tit = data_manager.read_inverted_index(recipes_dic, "index_title")
+
+    print "ingredients"
+    res = ing.look_for("cheese mushroom pizza", 1000)
+    h = {}
+    for t in res:
+        h[ing.recipes[t[0]].link] = 0.2 * float(t[1])
+    print "method"
+    res = met.look_for("cheese mushroom pizza", 1000)
+    for t in res:
+        try:
+            h[met.recipes[t[0]].link] = h[met.recipes[t[0]].link] + 0.4 * (float(t[1]))
+        except Exception:
+            h[met.recipes[t[0]].link] = 1./4.*float(t[1])
+    print "title"
+    res = tit.look_for("cheese mushroom pizza", 1000)
+    for t in res:
+        try:
+            h[tit.recipes[t[0]].link] = h[tit.recipes[t[0]].link] + 0.4 * float(t[1])
+        except Exception:
+            h[tit.recipes[t[0]].link] = 1./4.*float(t[1])
+
+    sorted_x = sorted(h.items(), key=operator.itemgetter(1), reverse=True)[:10]
+    for p in sorted_x:
+        print p
 
 
 if __name__ == "__main__":

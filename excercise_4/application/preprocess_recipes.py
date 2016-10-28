@@ -5,7 +5,7 @@ from excercise_4.application import crawl
 from excercise_4.data import data_manager
 
 
-def start(crawl_again=False, **recipes_dic):
+def start(recipes_dic, crawl_again=False):
     print "*** Start Preprocessing recipes ***"
 
     # 1
