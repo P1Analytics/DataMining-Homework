@@ -70,14 +70,14 @@ def doMyTest():
         try:
             h[met.recipes[t[0]].link] = h[met.recipes[t[0]].link] + 0.4 * (float(t[1]))
         except Exception:
-            h[met.recipes[t[0]].link] = 1./4.*float(t[1])
+            h[met.recipes[t[0]].link] = 0.4*float(t[1])
     print "title"
     res = tit.look_for("cheese mushroom pizza", 1000)
     for t in res:
         try:
             h[tit.recipes[t[0]].link] = h[tit.recipes[t[0]].link] + 0.4 * float(t[1])
         except Exception:
-            h[tit.recipes[t[0]].link] = 1./4.*float(t[1])
+            h[tit.recipes[t[0]].link] = 0.4*float(t[1])
 
     sorted_x = sorted(h.items(), key=operator.itemgetter(1), reverse=True)[:10]
     for p in sorted_x:
