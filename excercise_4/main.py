@@ -12,6 +12,7 @@ import excercise_4.application.download_recipes as download_recipes
 import excercise_4.application.preprocess_recipes as preprocess_recipes
 import excercise_4.application.create_inverted_index as create_inverted_index
 import excercise_4.data.data_manager as data_manager
+import excercise_4.util.util as util
 
 global recipes_dic
 global index
@@ -55,10 +56,13 @@ def main():
 
 def doMyTest():
     res, recipes_dic = data_manager.read()
-    res, ing = data_manager.read_inverted_index(recipes_dic, "index_ingredients")
-    res, met = data_manager.read_inverted_index(recipes_dic, "index_method")
-    res, tit = data_manager.read_inverted_index(recipes_dic, "index_title")
+    #res, ing = data_manager.read_inverted_index(recipes_dic, "index_ingredients")
+    #res, met = data_manager.read_inverted_index(recipes_dic, "index_method")
+    #res, tit = data_manager.read_inverted_index(recipes_dic, "index_title")
 
+    res, index = data_manager.read_inverted_index(recipes_dic)
+
+    '''
     print "ingredients"
     res = ing.look_for("cheese mushroom pizza", 1000)
     h = {}
@@ -82,6 +86,14 @@ def doMyTest():
     sorted_x = sorted(h.items(), key=operator.itemgetter(1), reverse=True)[:10]
     for p in sorted_x:
         print p
+    '''
+
+    for t in index.look_for(util.decode("cheese mushroom pizza"), 10):
+        print t[1], index.recipes[t[0]].link
+
+    #for t in index.look_for(util.decode(index.recipes[0].__str__()),2):
+    #    print index.recipes[0].link
+    #    print t[1], index.recipes[t[0]].link
 
 
 if __name__ == "__main__":

@@ -46,7 +46,7 @@ class InvertedIndex(object):
             if term in self.stopwords:
                 continue
             # stemming the token
-            term = self.english_stemmer.stem(term)
+            term = util.get_utf8_string(self.english_stemmer.stem(term))
 
             if recipes_filter is None:
                 for posting in self.index[term][1:]:
@@ -100,24 +100,21 @@ class InvertedIndex(object):
                 continue
             # stemming the token
             term = self.english_stemmer.stem(term)
-
             heapq.heappush(heap_len_postings, (len(self.index[term]), term))
 
-        # sort the term based on the length of the posting lists
-        ordered_term = heapq.nsmallest(k, heap_len_postings)
+        # sort the term based on the length of the posting lists (from the smallest to the biggest)
+        ordered_term = sorted(heap_len_postings)
         if len(ordered_term) <= 1:
             # query with only one term --> nothing to AND
             return self.look_for(query, k)
         else:
             # first term with the smallest posting list (that is also the maximum result achievable within intersection)
             curr_term = ordered_term[0][1]
-            #res = self.index[curr_term][1:]
-            res = []
-            for posting in self.index[curr_term][1:]:
-                res.append(posting[0])
+            # consider only the recipe id in the posting list (not the term frequency in the)
+            res = [posting[0] for posting in self.index[curr_term][1:]]
+
             i = 1
             while i<len(ordered_term):
-
                 # get next posting list, starting from the second element (the first is the IDF of the term)
                 posting_to_compare = self.index[ordered_term[i][1]][1:]
                 res = self.merge(res, posting_to_compare)
