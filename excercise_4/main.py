@@ -88,11 +88,11 @@ def doMyTest():
         print p
     '''
 
-    for t in index.look_for(util.decode("cheese mushroom pizza"), 10):
+    for t in index.look_for(util.decode("vegetarian roast paté"), 10):
         print t[1], index.recipes[t[0]].link
 
     #for t in index.look_for(util.decode(index.recipes[0].__str__()),2):
-    #    print index.recipes[0].link
+    #    print index.recipes[0].linkq
     #    print t[1], index.recipes[t[0]].link
 
 

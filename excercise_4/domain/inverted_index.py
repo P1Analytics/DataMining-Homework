@@ -40,6 +40,11 @@ class InvertedIndex(object):
         # key: recipe_id , value: cos similarity wrt the query
         result_diz = {}
 
+        # if the query contains special characters (eg 'è',..) --> convert it in ASCII code
+        if isinstance(query, str) is True:
+            query = util.decode(query)
+        print "Query processing > look for ["+query+"]"
+
         # tokenization of the query
         for term in {t.lower() for t in nltk.word_tokenize(query)}:
             # delete stopwrods from the query
