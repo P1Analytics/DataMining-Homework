@@ -1,0 +1,151 @@
+\documentclass[oneside]{article}			% document type
+
+% SETTINGS
+\usepackage{lmodern} 					% used family fonts
+\usepackage[T1]{fontenc} 					% 8bit encoding
+
+\usepackage[utf8]{inputenc} 				% accented letters
+\usepackage[english]{babel} 				% right separation into distinct syllables
+
+% UTILITY
+\usepackage{listings}					% insert code
+\lstset{breaklines=true}
+
+\usepackage{longtable} 					% insert table
+\usepackage{tabu}						% insert tabular
+\usepackage{booktabs}
+
+\usepackage{amsmath,amsfonts,amsthm} 	% insert math formulas
+\usepackage{pgfplots}					% grafici
+\pgfplotsset{compat=1.12}
+
+\usepackage{graphicx}					% insert images
+\usepackage{caption}					% insert special caption
+\usepackage{subcaption}					% insert subcaption
+
+\usepackage{geometry}					% insert page settings
+\geometry{
+	a4paper,
+	top = 3.5cm,
+	bottom = 3.5cm,
+	left = 2cm,
+	right = 2cm,
+	heightrounded,
+	headheight = 15pt,
+	marginparwidth = 0pt,
+	marginparsep = 0pt
+}
+
+\usepackage{placeins}					% insert barriers
+\usepackage{exercise}
+\renewcommand\ExerciseName{Question~}
+\renewcommand\AnswerName{Answer to question}
+\usepackage{lipsum}						% insert lipsum
+
+\setcounter{section}{1}					% let's start from index 1
+\renewcommand{\thesubsubsection}{\alph{subsubsection})}		% set letter for subsubsection
+\newenvironment{adjustwidth}{\begin{center}\begin{tabular}{p{0.9\textwidth}}		% new environment, tabbed and centered (used in subsubsection)
+% our test
+
+    }
+    { 
+    \end{tabular} 
+    \end{center}
+    }
+%end our test
+
+\begin{document}
+	\title{Data Mining:\\Homework 1}
+	\author{Simone Caldaro, Nana Zhou, Leonardo Martini}
+
+	\maketitle
+
+	\pagestyle{plain}
+	\tableofcontents		% index of chapters
+	\clearpage				% new page
+	
+	
+	
+	\addcontentsline{toc}{section}{Problem 1: shuffle a standard deck of cards}
+	\section*{Problem 1}We shuffle a standard deck of cards, obtaining a permutation that is uniform over all 52! possible permutations.
+	\subsection{Define a proper probability space $\Omega$ for the above random process}
+	 	$\Omega$  is all the permutations of the 52 cards, that are 52! \newline 
+		 This corresponds to all the possible ways a deck can be shuffled.
+
+	\subsection{Find the probability of the following events}
+
+	% 1.2.a
+	\begin{adjustwidth}
+	\subsubsection{The first three cards include at least one ace} 
+	Let define the event $\mathit{E}$ = "The first three cards doesn't include any ace" \newline
+	P($\mathit{E}$) = "the first card isn't an ace" $\times$ "the second card isn't an ace" $\times$ "the third card isn't an ace" \newline
+	P($\bar{E}$) = 1 - P($\mathit{E}$) = 1 - $\cfrac{48}{52}$ $\times$ $\cfrac{47}{51}$ $\times$ $\cfrac{46}{50}$ = 0,217375566 (that is the probability that at least one ace appear in the first three cards)
+	
+	\end{adjustwidth}
+	
+	% 1.2.b
+	\begin{adjustwidth}
+	\subsubsection{The first five cards include exactly one ace} 
+	Exactly one ace in five cards can be seen as the sum of five events: $E_1$ $E_2$ $E_3$ $E_4$ $E_5$, where $E_i$ corresponds to "the ace is in position $i$"
+	\newline Each $E_i$ has the probability $P(E_i)$ = $\cfrac{4}{52}$ $\times$ $\cfrac{48}{51}$ $\times$ $\cfrac{47}{50}$ $\times$ $\cfrac{46}{49}$ $\times$ $\cfrac{44}{48}$ = 0,059894727
+	\newline This formula doesn't depend on the position of the ace, in fact the latter one corresponds to $P(E_1)$ and if we invert on the numerator the factor 4 with the factor 48 then the probability corresponds to $P(E_2)$.
+	\newline $P(E)$ = $P(E_1)$ + $P(E_2)$ + $P(E_3)$ + $P(E_4)$ + $P(E_5)$ = 5 $\times$ $P(E_i)$ = 5 $\times$ 0,059894727 = 0,299473635
+
+	\end{adjustwidth}
+
+	% 1.2.c
+	\begin{adjustwidth}
+	\subsubsection{The first three cards are all of the same rank (they are the same number or both are J, or all three are Q, etc.)} 
+	\lipsum[3]		% TODO our answer here
+	\end{adjustwidth}
+	
+	% 1.2.d
+	\begin{adjustwidth}
+	\subsubsection{The first five cards are all diamonds.} 
+	\lipsum[4]		% TODO our answer here
+	\end{adjustwidth}
+	
+	% 1.2.e
+	\begin{adjustwidth}
+	\subsubsection{The first five cards form a full house (three of one rank and two of another rank).} 
+	\lipsum[5]		% TODO our answer here
+	\end{adjustwidth}
+
+	\subsection{(Optional) Develop some small programs in Python to perform simulations to check your answers} answer 3
+	
+	
+	\clearpage				% new page
+	% Problem 2
+	\setcounter{section}{2}		% set number of section to 2
+	\setcounter{subsection}{0}		% reset number of subsection
+	\addcontentsline{toc}{section}{Problem 2: throw a set of 3 regular dice}
+	\section*{Problem 2} 
+	You throw a set of 3 regular dice again and again, until for the first time you see a sum of 11 or a sum of 16.
+	\subsection{Design an appropriate probability space for the above process}
+	answer 1		% TODO answer here
+	\subsection{What is the probability that you stop because you see a sum of 16?}
+	answer 2		% TODO answer here
+
+
+	\clearpage				% new page	
+	% Problem 3
+	\setcounter{section}{3}		% set number of section to 3
+	\setcounter{subsection}{0}		% reset number of subsection
+	\addcontentsline{toc}{section}{Problem 3: n men and m women sit in a round table}
+	\section*{Problem 3} 
+	A group of n men and m women go to a Chinese restaurant and sit in a round table, such that each person has to other person next to him/her
+	\subsection{Describe a sample space that describes the random process}
+	answer 1		% TODO answer here
+	\subsection{Find the expected number of men who will be sitted next to at least one woman}
+	answer 2		% TODO answer here
+		
+		
+	\clearpage				% new page
+	% Problem 4
+	\setcounter{section}{4}		% set number of section to 4
+	\setcounter{subsection}{0}		% reset number of subsection
+	\addcontentsline{toc}{section}{Problem 4: search engine for recipes}
+	\section*{Problem 4} 
+
+
+\end{document}
