@@ -50,7 +50,7 @@
 \usepackage{enumitem}			% used to make a list of items
 
 % our test
-
+\usepackage{hyperref}
 %end our test
 
 \begin{document}
@@ -208,7 +208,7 @@
 	\addcontentsline{toc}{section}{Problem 3: n men and m women sit in a round table}
 	\section*{Problem 3}
 	A group of n men and m women go to a Chinese restaurant and sit in a round table, such that each person has to other person next to him/her
-	\subsection{Describe a sample space that describes the random process}
+	\subsection{Sample space that describes the random process}
 	The sample of space $\Omega$ is composed by the possible way in which n man and m woman can sit. Given a general disposition, say:
 	\[p_1, p_2, ... , p_{n+m} \]
 	where $p_i$ can be of whatever sex. This disposition is repeated n+m times (just shift one position toward right (or left) until $p_i$ is sat in its starting position).
@@ -228,15 +228,40 @@
 	\[ E[X] =  E[\sum_{i=1}^{n}X_i] = \sum_{i=1}^{n}E[X_i] = n\cdot(1 - \frac{n-1}{n+m-1}\cdot\frac{n-2}{n+m-2}) \]
 
 
-
-		
-		
 	\clearpage				% new page
 	% Problem 4
 	\setcounter{section}{4}		% set number of section to 4
 	\setcounter{subsection}{0}		% reset number of subsection
 	\addcontentsline{toc}{section}{Problem 4: search engine for recipes}
-	\section*{Problem 4} 
+	\section*{Problem 4}
+	% 4.1 download recipes
+	\subsection{Download the recipes}
+	To download all the recipes we have created a crawler that starting from \url{http://www.bbc.co.uk/food/dishes}, it gets all the dishes by letter. In each dish page (for example, \url{http://www.bbc.co.uk/food/brioche}) we are able to find all the recipes of this dish and also every recipe that uses this specific dish.
+	\\In order to not crawl every time the web site, we have cached some intermediate result. Precisely, this task is computed in three step:
+	\begin{enumerate}[label=\arabic*.]
+		% 4.1.1
+		\item Save the link of the dishes that are listed alphabetically: this phase will produce a file in which each row corresponds to a pair <dish, link>, formatted in this way:
+		\\\\
+		\hspace*{-1in}\includegraphics[width=10cm, height=5.5cm]{./report_file/4_1_1_ex.png}\includegraphics[width=10cm, height=5.5cm]{./report_file/cache_dish_link.png}
+		\begin{flushright}\href{run:./report_file/cache_dish_link.tsv}{Open the entire file}\end{flushright}
+		% 4.1.2
+		\item	Once we have the link of a dish, we need to get all the recipes for this dish, but also all the recipes that use this dish. In order to do that, we crawl the pages found in the first step and we get the link where all the recipe links are listed. We store the web pages that contain the recipe links list likewise in the first step, with a pair <dish, link>.
+		\\\\
+		\hspace*{-0.5in}\includegraphics[width=8.5cm, height=7.5cm]{./report_file/4_1_2_ex.png}\includegraphics[width=8.5cm, height=6cm]{./report_file/cache_all_recipes.png}
+		\begin{flushright}\href{run:./report_file/cache_all_recipes.tsv}{Open the entire file}\end{flushright}
+		% 4.1.3
+		\item The last part of this task consists in crawling the list of recipes for each link found in the previous phase. As can be seen in the figure below, every list has different size: the crawling must finish when the last page has been elaborated. The application acts in order to not save the same recipe link, that can be found under different dishes.
+		\\\\
+		\hspace*{-1.2in}\includegraphics[width=8.5cm, height=10.5cm]{./report_file/4_1_3_ex.png}
+		\includegraphics[width=15cm, height=5cm]{./report_file/cache_link_recipes.png}
+		\begin{flushright}\href{run:./report_file/cache_link_recipes.tsv}{Open the entire file}\end{flushright}
+	\end{enumerate}
+	At the end of these three steps we have all the recipe available links on the web site, that must be elaborated in order to get the fondametal data for our recipe search engine.
+
+	\subsection{Preprocess recipes}
+	%TODO preprocess recipes
+	\subsection{Build a search-engine index}
+	%TODO build a search engine index
 
 
 \end{document}
