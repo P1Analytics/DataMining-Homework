@@ -201,17 +201,34 @@
 	\[ P(E_2|E_s) = \frac{P(E_2 \cap E_s)}{P(E_s)} = \frac{P(E_2)}{P(E_s)} = \frac{\frac{6}{216}}{\frac{33}{216}} = \frac{6}{33} = 0,\overline{18} \]
 
 
-	\clearpage				% new page	
+	\clearpage				% new page
 	% Problem 3
 	\setcounter{section}{3}		% set number of section to 3
 	\setcounter{subsection}{0}		% reset number of subsection
 	\addcontentsline{toc}{section}{Problem 3: n men and m women sit in a round table}
-	\section*{Problem 3} 
+	\section*{Problem 3}
 	A group of n men and m women go to a Chinese restaurant and sit in a round table, such that each person has to other person next to him/her
 	\subsection{Describe a sample space that describes the random process}
-	answer 1		% TODO answer here
-	\subsection{Find the expected number of men who will be sitted next to at least one woman}
-	answer 2		% TODO answer here
+	The sample of space $\Omega$ is composed by the possible way in which n man and m woman can sit. Given a general disposition, say:
+	\[p_1, p_2, ... , p_{n+m} \]
+	where $p_i$ can be of whatever sex. This disposition is repeated n+m times (just shift one position toward right (or left) until $p_i$ is sat in its starting position).
+	\\
+	Then, the size of our sample space is \[ \frac{(n+m)!}{n+m} = (n+m-1)!\]
+	\subsection{Find the expected number of men who will be sat next to at least one woman}
+	Let define a random variable X that corresponds to the number of men sat next to at least one woman. The expectation of X is
+	\[ E[X] =  \sum_{i=0}^{n}iP(X=i)\]
+	Being hard to compute, let's define $n$ 0-1 random variable $X_i$:
+	\[ X_i = \begin{cases}
+		1 & \quad \text{if the } i \text{-$th$ man is next to at least one woman} \\
+		0 & \quad \text{if the } i \text{-$th$ man is next to only men} \\
+		 \end{cases}\]
+	The expectation of $X_i$ is:
+	\[ E[X_i] =  1P(X_i=1)+0P(X_i=0) = P(X_i=1) = 1-P(X_i=0) = 1 - \frac{n-1}{n+m-1}\cdot\frac{n-2}{n+m-2}\]
+	Given the linearity of the expectation we can compute now $E[X]$, that is:
+	\[ E[X] =  E[\sum_{i=1}^{n}X_i] = \sum_{i=1}^{n}E[X_i] = n\cdot(1 - \frac{n-1}{n+m-1}\cdot\frac{n-2}{n+m-2}) \]
+
+
+
 		
 		
 	\clearpage				% new page
