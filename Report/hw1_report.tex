@@ -46,14 +46,16 @@
 \renewcommand{\thesubsubsection}{\alph{subsubsection})}		% set letter for subsubsection
 
 \newenvironment{adjustwidth}{\begin{center}\begin{tabular}{p{0.9\textwidth}}   }{\end{tabular} \end{center}}		% new environment, tabbed and centered (used in subsubsection)
+\usepackage[ampersand]{easylist}
+\usepackage{enumitem}			% used to make a list of items
 
 % our test
-\usepackage[ampersand]{easylist}
+
 %end our test
 
 \begin{document}
 	\title{Data Mining:\\Homework 1}
-	\author{Simone Caldaro, Nana Zhou, Leonardo Martini}
+	\author{Simone Caldaro, Nana Zhu, Leonardo Martini}
 
 	\maketitle
 
@@ -75,18 +77,19 @@
 	\begin{adjustwidth}
 	\subsubsection{The first three cards include at least one ace}
 	Let define the event $\mathit{E}$ = "The first three cards doesn't include any ace" \newline
-	P($\mathit{E}$) = "the first card isn't an ace" $\times$ "the second card isn't an ace" $\times$ "the third card isn't an ace" \newline
-	P($\bar{E}$) = 1 - P($\mathit{E}$) = 1 - $\cfrac{48}{52}$ $\times$ $\cfrac{47}{51}$ $\times$ $\cfrac{46}{50}$ = 0,217375566 (that is the probability that at least one ace appear in the first three cards)
+	P($\mathit{E}$) = "the first card isn't an ace" $\times$ "the second card isn't an ace" $\times$ "the third card isn't an ace"
+	\[ P(\bar{E}) = 1 - P(\mathit{E}) = 1 - \cfrac{48}{52} \times \cfrac{47}{51} \times \cfrac{46}{50}  = 0,217375566  \]
+	that is the probability that at least one ace appear in the first three cards
 
 	\end{adjustwidth}
 
 	% 1.2.b
 	\begin{adjustwidth}
 	\subsubsection{The first five cards include exactly one ace}
-	Exactly one ace in five cards can be seen as the sum of five events: $E_1$ $E_2$ $E_3$ $E_4$ $E_5$, where $E_i$ corresponds to "the ace is in position $i$"
-	\newline Each $E_i$ has the probability $P(E_i)$ = $\cfrac{4}{52}$ $\times$ $\cfrac{48}{51}$ $\times$ $\cfrac{47}{50}$ $\times$ $\cfrac{46}{49}$ $\times$ $\cfrac{44}{48}$ = 0,059894727
+	Exactly one ace in five cards can be seen as the sum of five events: $E_1$, $E_2$, $E_3$, $E_4$ and $E_5$, where $E_i$ corresponds to "the ace is in position $i$"
+	\newline Each $E_i$ has the probability \[P(E_i) = \cfrac{4}{52} \times \cfrac{48}{51} \times \cfrac{47}{50} \times \cfrac{46}{49} \times \cfrac{44}{48} = 0,059894727 \]
 	\newline This formula doesn't depend on the position of the ace, in fact the latter one corresponds to $P(E_1)$ and if we invert on the numerator the factor 4 with the factor 48 then the probability corresponds to $P(E_2)$.
-	\newline $P(E)$ = $P(E_1)$ + $P(E_2)$ + $P(E_3)$ + $P(E_4)$ + $P(E_5)$ = 5 $\times$ $P(E_i)$ = 5 $\times$ 0,059894727 = 0,299473635
+	\[P(E) = P(E_1) + P(E_2) + P(E_3) + P(E_4) + P(E_5) = 5 \times P(E_i) = 5 \times 0,059894727 = 0,299473635 \]
 	\end{adjustwidth}
 
 	% 1.2.c
@@ -94,15 +97,14 @@
 	\subsubsection{The first three cards are all of the same rank (they are the same number or both are J, or all three are Q, etc.)}
 	Whatever the first card is, the probability to have three cards of the same rank depends only by the second card and the third card.
 	\newline $P(E)$ = "the $2^{nd}$ card is of the same rank of the $1^{st}$ one" $\times$ "the $3^{rd}$ card is of the same rank as the $1^{st}$ and $2^{nd}$ ones"
-	\newline $P(E)$ = $\cfrac{3}{51}$ $\times$ $\cfrac{2}{50}$ = 0,002352941
+	\[P(E) = \cfrac{3}{51} \times \cfrac{2}{50} = 0,002352941 \]
 	\end{adjustwidth}
 
 	% 1.2.d
 	\begin{adjustwidth}
 	\subsubsection{The first five cards are all diamonds.}
-	Everytime we pick a diamond card, the next step the number of diamond cards we can pick are decreased by one.
-	\newline Number of diamond cards = 13
-	\newline  $P(E)$ = $\cfrac{13}{52}$ $\times$ $\cfrac{12}{51}$ $\times$$\cfrac{11}{50}$ $\times$ $\cfrac{10}{49}$ $\times$ $\cfrac{9}{48}$ = 0,000495198
+	Everytime we pick a diamond card, the next step the number of diamond cards we can pick are decreased by one(at the beginning the number of diamond cards are 13).
+	\[P(E) = \cfrac{13}{52} \times \cfrac{12}{51} \times \cfrac{11}{50} \times \cfrac{10}{49} \times \cfrac{9}{48} = 0,000495198\]
 	\end{adjustwidth}
 
 	% 1.2.e
@@ -124,10 +126,7 @@
 	& "pick the fouth card with the same rank as the third one, in order to have 2/3 of a tris"
 	& "pick the fifth and last card in order to comple the tris"
 	\end{easylist}
-	\\
-	$P(E)$ = $\cfrac{3}{51}$ $\times$ $\cfrac{48}{50}$ $\times$ $\cfrac{3}{49}$ $\times$ $\cfrac{2}{48}$ $\times$ = 0,000144058
-	\\
-	\\
+	\[P(E) = \cfrac{3}{51} \times \cfrac{48}{50} \times \cfrac{3}{49} \times \cfrac{2}{48} \times = 0,000144058\]
 	This is the probability to have exactly this kind of full house (XXYYY). But we can also have:
 	\begin{easylist}[itemize]
 		& XYXYY
@@ -138,24 +137,68 @@
 	If we count all these possible permutation, we'll end up with $\frac{5!}{3!2!}$ = 10 where 5 is the number of cards to permute, 3 and 2 are the rank of the cards that repeat in the permutation.
 	\\\\
 	The final probability to have a full house is: 10 $\times$ $P(E)$ = 0,00144058
-
-
 	\end{adjustwidth}
 
 	\subsection{(Optional) Develop some small programs in Python to perform simulations to check your answers} answer 3
-	
-	
+
+
 	\clearpage				% new page
 	% Problem 2
 	\setcounter{section}{2}		% set number of section to 2
 	\setcounter{subsection}{0}		% reset number of subsection
 	\addcontentsline{toc}{section}{Problem 2: throw a set of 3 regular dice}
-	\section*{Problem 2} 
+	\section*{Problem 2}
 	You throw a set of 3 regular dice again and again, until for the first time you see a sum of 11 or a sum of 16.
 	\subsection{Design an appropriate probability space for the above process}
-	answer 1		% TODO answer here
+	The sample space $\Omega$ is composed by a set of triple <$d_1$, $d_2$, $d_3$> , in which $d_i$ can be a number $\in [1, 6]$.
+	\\
+	For example, <1, 3, 4> $\in$ $\Omega$, while <6,2,8> $\notin$ $\Omega$
+	\\\\
+	The size of $\Omega$ is $6^3$ = 216
 	\subsection{What is the probability that you stop because you see a sum of 16?}
-	answer 2		% TODO answer here
+	\begin{itemize}
+		\item $E_1$ = "We get a sum of 11"
+			\\
+			The sum of the value of the three dices ($d_1$ + $d_2$ + $d_3$) can be 11 when:
+			\begin{enumerate}[label=(\alph*)]
+				\item 1 + 4 + 6 and there are 3! possible ways to have this result:
+					\begin{enumerate}[label=\arabic*.]
+					\item <1, 2, 6>
+					\item <1, 6, 2>
+					\item <2, 1, 6>
+					\item <2, 6, 1>
+					\item <6, 1, 2>
+					\item <6, 2, 1>
+					\end{enumerate}
+				\item 1 + 5 + 5 and there are $\frac{3!}{2!}$ = 3 possible ways to have this result:
+					\begin{enumerate}[label=\arabic*.]
+						\item <1, 5, 5>
+						\item <5, 1, 5>
+						\item <1, 5, 5>
+					\end{enumerate}
+				\item 2 + 3 + 6 >> 3! ways
+				\item 2 + 4 + 5 >> 3! ways
+				\item 3 + 4 + 4 >> 3 ways
+				\item 3 + 5 + 3 >> 3 ways
+				\item 3 + 6 + 2 >> 3! ways.... but this triple has already been counted in (c)! So we can stop our count here, and don't include this row in the count!
+			\end{enumerate}
+			The probability to have as sum 11 is the number of events in which this sum is achieved (3 $\times$ 3! + 3 $\times$ 3 = 27 times) divided by all the number of all the possible events (216):
+			\[P(E_1) = \frac{27}{216} = 0,125 \]
+		\item $E_2$ = "We get a sum of 16"
+			\\
+			The sum of the value of the three dices ($d_1$ + $d_2$ + $d_3$) can be 16 when:
+			\begin{enumerate}[label=(\alph*)]
+				\item 4 + 6 + 6 >> 3 ways
+				\item 5 + 5 + 6 >> 3 ways
+			\end{enumerate}
+			The probability to have as sum 16 is the number of events in which this sum is achieved (3 $\times$ 2 = 6 times) divided by all the number of all the possible events (216):
+			\[P(E_2) = \frac{6}{216} = 0,02\overline{7}\]
+		\item $E_s$ = "We stop rolling (we get either 11 or 16)" = $E_1$ $\cup$ $E_2$
+		\[P(E_s) = P(E_1) + P(E_2) = \frac{27}{216} + \frac{6}{216} = \frac{33}{216} = 0,152\overline{7}\]
+	\end{itemize}
+	The probability to stop because a 16 is:
+	\\
+	\[ P(E_2|E_s) = \frac{P(E_2 \cap E_s)}{P(E_s)} = \frac{P(E_2)}{P(E_s)} = \frac{\frac{6}{216}}{\frac{33}{216}} = \frac{6}{33} = 0,\overline{18} \]
 
 
 	\clearpage				% new page	
