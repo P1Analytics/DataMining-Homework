@@ -236,30 +236,56 @@
 	\section*{Problem 4}
 	% 4.1 download recipes
 	\subsection{Download the recipes}
-	To download all the recipes we have created a crawler that starting from \url{http://www.bbc.co.uk/food/dishes}, it gets all the dishes by letter. In each dish page (for example, \url{http://www.bbc.co.uk/food/brioche}) we are able to find all the recipes of this dish and also every recipe that uses this specific dish.
-	\\In order to not crawl every time the web site, we have cached some intermediate result. Precisely, this task is computed in three step:
+	To download all the recipes we have created a \textbf{crawler} that starting from \url{http://www.bbc.co.uk/food/dishes}, it gets all the dishes by letter. In each dish page (for example, \url{http://www.bbc.co.uk/food/brioche}) we are able to find all the recipes of this dish and also every recipe that uses this specific dish.
+	\\\\
+	To accomplish this task, one of the most important python module we have used  is \textbf{BeautifulSoap}. Thanks to it, we can parse an \textit{html} page, inspect the html in specific \textit{tags}, get their \textit{attributes} and their \textit{value}. The html page is retrieved through the python module \textbf{requests}, that can handle http \textit{request} and \textit{response}. The \textbf{time} module has been used to create a \textit{delay} of one second between two http requests.
+	\\\\In the details, this task is attained through a chain of three step:
 	\begin{enumerate}[label=\arabic*.]
 		% 4.1.1
 		\item Save the link of the dishes that are listed alphabetically: this phase will produce a file in which each row corresponds to a pair <dish, link>, formatted in this way:
 		\\\\
-		\hspace*{-1in}\includegraphics[width=10cm, height=5.5cm]{./report_file/4_1_1_ex.png}\includegraphics[width=10cm, height=5.5cm]{./report_file/cache_dish_link.png}
+		\hspace*{-1in}\includegraphics[width=10cm, height=5.5cm]{./report_file/img/4_1_1_ex.png}\includegraphics[width=10cm, height=5.5cm]{./report_file/img/cache_dish_link.png}
 		\begin{flushright}\href{run:./report_file/cache_dish_link.tsv}{Open the entire file}\end{flushright}
+		\clearpage
 		% 4.1.2
-		\item	Once we have the link of a dish, we need to get all the recipes for this dish, but also all the recipes that use this dish. In order to do that, we crawl the pages found in the first step and we get the link where all the recipe links are listed. We store the web pages that contain the recipe links list likewise in the first step, with a pair <dish, link>.
+		\item	Once we have the link of a dish, we need to get all the recipes for this dish, but also all the recipes that use this dish. In order to do that, we crawl the pages found in the first step and we get the link where all the recipe links are listed. We store the web pages that contain the recipe links list likewise in the first step, through a pair <dish, link>.
 		\\\\
-		\hspace*{-0.5in}\includegraphics[width=8.5cm, height=7.5cm]{./report_file/4_1_2_ex.png}\includegraphics[width=8.5cm, height=6cm]{./report_file/cache_all_recipes.png}
+		\hspace*{-0.5in}\includegraphics[width=8.5cm, height=7.5cm]{./report_file/img/4_1_2_ex.png}\includegraphics[width=8.5cm, height=6cm]{./report_file/img/cache_all_recipes.png}
 		\begin{flushright}\href{run:./report_file/cache_all_recipes.tsv}{Open the entire file}\end{flushright}
 		% 4.1.3
-		\item The last part of this task consists in crawling the list of recipes for each link found in the previous phase. As can be seen in the figure below, every list has different size: the crawling must finish when the last page has been elaborated. The application acts in order to not save the same recipe link, that can be found under different dishes.
+		\item The last part of this task consists in crawling the list of recipes for each link found in the previous phase. As can be seen in the figure below, every list has different size: the crawling must finish when the last page has been elaborated. The application acts in order to not save twice the same recipe link, that can be found under different dishes.
 		\\\\
-		\hspace*{-1.2in}\includegraphics[width=8.5cm, height=10.5cm]{./report_file/4_1_3_ex.png}
-		\includegraphics[width=15cm, height=5cm]{./report_file/cache_link_recipes.png}
+		\hspace*{-1.2in}\includegraphics[width=6.5cm, height=5.5cm]{./report_file/img/4_1_3_ex.png}
+		\includegraphics[width=15cm, height=5cm]{./report_file/img/cache_link_recipes.png}
 		\begin{flushright}\href{run:./report_file/cache_link_recipes.tsv}{Open the entire file}\end{flushright}
 	\end{enumerate}
-	At the end of these three steps we have all the recipe available links on the web site, that must be elaborated in order to get the fondametal data for our recipe search engine.
+	At the end of these three steps we have all the recipe available links on the web site, that must be elaborated in order to get the fundamental data for our recipe search engine. Furthermore, in order to not crawl every time the web site, we have cached intermediate results.
+	\\
+	To see the python module that concerns about this task, click on \href{run:./report_file/src/download_recipes.py}{\textit{"download\_recipes.py"}}.
 
+	%4.2 preprocess recipes
 	\subsection{Preprocess recipes}
-	%TODO preprocess recipes
+	The input of this task is the output of the the previous one: given a list of recipe names and related links, the application crawls the web page of the recipe, get all the information that it can get and creates what is our corpus (all the recipes with their data). More precisely the information we are looking for are:
+	\begin{itemize}
+		\item Chef name
+		\item Preparation time
+		\item Cook time
+		\item Number people serves
+		\item Dietary info
+		\item Ingredients
+		\item Method
+	\end{itemize}
+	Furthermore we store also the \textit{link} of the recipe: it's useful as identifier (in fact it's possible that more than one recipe have the same name, but not the same link), and it can be returned also by the query engine.
+	\\
+	However, it may be possible that some recipe not have all the features. In that case a blank is saved.
+	\\
+	Once we get all these features for a recipe, we store it as a unique row in which every field is separated by a tab. The entire corpus is saved in \href{run:./report_file/recipe_file_data.tsv}{\textit{"recipe\_file\_data.tsv"}}.
+	\begin{figure}[h]
+		\includegraphics[width=15cm, height=6cm]{./report_file/img/recipe_file_data.png}\caption{This is the output saved row of the "Apricot, carrot and almond jam" recipe.}
+	\end{figure}
+	\\
+	The python module that concerns about this task is  \href{run:./report_file/src/preprocess\_recipes.py}{\textit{"preprocess\_recipes.py"}}. As in the previous task, \textbf{BeautifulSoap} has been used to parse the html page of a recipe.
+
 	\subsection{Build a search-engine index}
 	%TODO build a search engine index
 
