@@ -245,22 +245,22 @@
 		\item Save the link of the dishes that are listed alphabetically: this phase will produce a file in which each row corresponds to a pair <dish, link>, formatted in this way:
 		\\\\
 		\hspace*{-1in}\includegraphics[width=10cm, height=5.5cm]{./report_file/img/4_1_1_ex.png}\includegraphics[width=10cm, height=5.5cm]{./report_file/img/cache_dish_link.png}
-		\begin{flushright}\href{run:./report_file/cache_dish_link.tsv}{Open the entire file}\end{flushright}
+		\begin{flushright}\href{run:./report_file/cache_dish_link.tsv}{Open file \textit{"cache\_dish\_link.tsv"}}\end{flushright}
 		\clearpage
 		% 4.1.2
 		\item	Once we have the link of a dish, we need to get all the recipes for this dish, but also all the recipes that use this dish. In order to do that, we crawl the pages found in the first step and we get the link where all the recipe links are listed. We store the web pages that contain the recipe links list likewise in the first step, through a pair <dish, link>.
 		\\\\
 		\hspace*{-0.5in}\includegraphics[width=8.5cm, height=7.5cm]{./report_file/img/4_1_2_ex.png}\includegraphics[width=8.5cm, height=6cm]{./report_file/img/cache_all_recipes.png}
-		\begin{flushright}\href{run:./report_file/cache_all_recipes.tsv}{Open the entire file}\end{flushright}
+		\begin{flushright}\href{run:./report_file/cache_all_recipes.tsv}{Open file \textit{"cache\_all\_recipes.tsv"}}\end{flushright}
 		% 4.1.3
-		\item The last part of this task consists in crawling the list of recipes for each link found in the previous phase. As can be seen in the figure below, every list has different size: the crawling must finish when the last page has been elaborated. The application acts in order to not save twice the same recipe link, that can be found under different dishes.
+		\item The last part of this task consists of crawling the list of recipes for each link found in the previous phase. As can be seen in the figure below, every list has different size: the crawling must finish when the last page has been elaborated. The application acts in order to not save twice the same recipe link, that can be found under different dishes.
 		\\\\
 		\hspace*{-1.2in}\includegraphics[width=6.5cm, height=5.5cm]{./report_file/img/4_1_3_ex.png}
 		\includegraphics[width=15cm, height=5cm]{./report_file/img/cache_link_recipes.png}
-		\begin{flushright}\href{run:./report_file/cache_link_recipes.tsv}{Open the entire file}\end{flushright}
+		\begin{flushright}\href{run:./report_file/cache_link_recipes.tsv}{Open file \textit{"cache\_link\_recipes.tsv"}}\end{flushright}
 	\end{enumerate}
-	At the end of these three steps we have all the recipe available links on the web site, that must be elaborated in order to get the fundamental data for our recipe search engine. Furthermore, in order to not crawl every time the web site, we have cached intermediate results.
-	\\
+	At the end of these three steps we have all the recipes available links on the web site, that must be elaborated in order to get the fundamental data for our recipe search engine. Furthermore, in order to not crawl every time the web site, we have cached intermediate results.
+	\\\\
 	To see the python module that concerns about this task, click on \href{run:./report_file/src/download_recipes.py}{\textit{"download\_recipes.py"}}.
 
 	%4.2 preprocess recipes
@@ -279,15 +279,83 @@
 	\\
 	However, it may be possible that some recipe not have all the features. In that case a blank is saved.
 	\\
-	Once we get all these features for a recipe, we store it as a unique row in which every field is separated by a tab. The entire corpus is saved in \href{run:./report_file/recipe_file_data.tsv}{\textit{"recipe\_file\_data.tsv"}}.
+	Once we get all these features for a recipe, we store it as a unique row in which every field is separated by a tab.
+	\\\\The entire corpus is saved in \href{run:./report_file/recipe_file_data.tsv}{\textit{"recipe\_file\_data.tsv"}}.
 	\begin{figure}[h]
 		\includegraphics[width=15cm, height=6cm]{./report_file/img/recipe_file_data.png}\caption{This is the output saved row of the "Apricot, carrot and almond jam" recipe.}
 	\end{figure}
 	\\
 	The python module that concerns about this task is  \href{run:./report_file/src/preprocess\_recipes.py}{\textit{"preprocess\_recipes.py"}}. As in the previous task, \textbf{BeautifulSoap} has been used to parse the html page of a recipe.
 
-	\subsection{Build a search-engine index}
-	%TODO build a search engine index
+	\clearpage
+	\subsection{Build a search-engine index and query evaluation}
+	The input of this task is a dictionary created by the output of the previous task, dictionary that has key equals to a link of the recipe and value an object of the class \href{run:./report_file/src/recipe.py}{\textit{"recipe.py"}}, that contains all the attributes we have found (eg: Chef name, preparation time, ...).
+	\\\\
+	The index build process is a chain of four steps:
+	\begin{enumerate}[label=\arabic*.]
+		% 4.3.1
+		\item We map our content into inverted index data structure.
+		\\For each recipe and for each feature of the recipe:
+		\begin{itemize}
+			\item tokenize it;
+			\item remove stopwords;
+			\item stem tokens using an English Stemmer;
+			\item add the pair (recipe\_id, term\_frequncy) to the posting list of the terms.
+		\end{itemize}
+
+		To compute term frequency we have used the function \textit{FreqDist} in the \textbf{nltk} module.
+		% 4.3.2
+		\item Once all the recipes have been added to the index, we compute the inverse document frequency of every term and we saved it at the head of the each posting list.
+		% 4.3.3
+		\item In order to compute the query evaluation and its ranking, this step concerns about the construction of the vector space. Starting from the inverted index, we create a data structure based on recipe\_id and terms that belong to the vocabulary which appear in the recipe. We aim to represent each recipe as a vector, without storing the 0 element. Every component is a different term associate with its normalized tf-idf.
+		% 4.3.4
+		\item The last step is just storing the index with its vector space on disk.
+	\end{enumerate}
+	% query evaluation
+	Query evaluation is done considering the query as a recipe: after tokenization, removing stopwords, and stemming the remain tokens, we compute the cosine similarity between the query and each recipe that contains at least one term of the query.
+	\\
+	All the recipes that are returned with their score are added to an heap, in which the key is the score and the value is the recipe. We now return the top k recipes inside the heap.
+	\\\\
+	For the purpose of ranking the documents matching the query, we are interested in the relative (rather than absolute) scores of the recipes in the collection. To this end, it suffices to compute the cosine similarity from each recipe unit vector to the query vector in which all non-zero components are set to 1), rather than to the unit vector of the query. [from \textit{"An Introduction to Information Retrieval"}]
+
+	\clearpage
+	Here some examples of query evaluation.
+	\\
+	\begin{figure}[h]
+		\includegraphics[width=18cm, height=3.1cm]{./report_file/img/4_3_1_ex.png}\caption{This is the ranked result of the query evaluation \textit{"mushroom cheese"}.}
+	\end{figure}
+	\begin{figure}[h]
+		\includegraphics[width=18cm, height=3.1cm]{./report_file/img/4_3_2_ex.png}\caption{This is the ranked result of the query evaluation of \textit{"Dermot's crisp stuffed mushrooms with goats' cheese and herb salad"}, that is the title of the last result in the previous query example.}
+	\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \end{document}
