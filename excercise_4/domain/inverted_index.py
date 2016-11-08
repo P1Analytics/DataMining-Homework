@@ -28,7 +28,7 @@ class InvertedIndex(object):
     def recipes_iteritems(self):
         return self.recipes.iteritems()
 
-    def look_for(self, query, k=10, recipes_filter=None):
+    def look_for(self, query, weight=1.0, k=10, recipes_filter=None):
         '''
 
         :param query:
@@ -56,11 +56,11 @@ class InvertedIndex(object):
             if recipes_filter is None:
                 for posting in self.index[term][1:]:
                     recipe_id = posting[0]
-                    self.compute_term_dot_prod(recipe_id, result_diz, term)
+                    self.compute_term_dot_prod(recipe_id, result_diz, term, weight)
             else:
                 # compute the dot product only for the recipe in the list passed as a parameter
                 for recipe_id in recipes_filter:
-                    self.compute_term_dot_prod(recipe_id, result_diz, term)
+                    self.compute_term_dot_prod(recipe_id, result_diz, term, weight)
 
         # rank the result
         return self.rank_result(k, result_diz)
@@ -87,15 +87,15 @@ class InvertedIndex(object):
         return ranked_res
 
 
-    def compute_term_dot_prod(self, recipe_id, result_list, term):
+    def compute_term_dot_prod(self, recipe_id, result_list, term, weight=1.0):
         tfidf = self.vector_space.get_recipe_term_tfidf(recipe_id, term)
         try:
-            result_list[recipe_id] = float(result_list[recipe_id]) + float(tfidf)
+            result_list[recipe_id] = float(result_list[recipe_id]) + weight*float(tfidf)
         except KeyError:
-            result_list[recipe_id] = float(tfidf)
+            result_list[recipe_id] = weight*float(tfidf)
 
-    def and_query(self, query, k=10):
-        print "\tComputing AND query for: "+query
+    def and_query(self, query, weight=1.0, k=10):
+        print "Computing AND query for: "+query
         heap_len_postings = []
 
         # tokenization of the query
@@ -111,7 +111,7 @@ class InvertedIndex(object):
         ordered_term = sorted(heap_len_postings)
         if len(ordered_term) <= 1:
             # query with only one term --> nothing to AND
-            return self.look_for(query, k)
+            return self.look_for(query, weight, k)
         else:
             # first term with the smallest posting list (that is also the maximum result achievable within intersection)
             curr_term = ordered_term[0][1]
@@ -124,7 +124,7 @@ class InvertedIndex(object):
                 posting_to_compare = self.index[ordered_term[i][1]][1:]
                 res = self.merge(res, posting_to_compare)
                 i=i+1
-            return self.look_for(query, k, res)
+            return self.look_for(query, weight, k, res)
 
 
     def merge(self, postings_1, postings_2):

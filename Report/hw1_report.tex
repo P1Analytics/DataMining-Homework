@@ -328,6 +328,26 @@
 		\includegraphics[width=18cm, height=3.1cm]{./report_file/img/4_3_2_ex.png}\caption{This is the ranked result of the query evaluation of \textit{"Dermot's crisp stuffed mushrooms with goats' cheese and herb salad"}, that is the title of the last result in the previous query example.}
 	\end{figure}
 
+	\clearpage
+	\subsection{Extra Credit}
+	\begin{itemize}
+		\item AND query: we have implemented the query evaluation that returns as output all the recipes that contain all the terms of the query. The result is ranked as ever.
+		\\\\
+		The evaluation is performed in two steps: first we get all the recipes which contain every term in query. Second, we compute the intersection between all the posting lists found at the first step.
+		\begin{figure}[h]
+			\includegraphics[width=18cm, height=3.1cm]{./report_file/img/4_4_1_ex.png}\caption{This is the ranked result of the AND-query evaluation \textit{"mushroom cheese"}. Note that the recipe in the $8^{th}$ position of Figure 2 \textit{"Mushroom stuffed with spinach, breadcrumbs, garlic and herbs"} is not returned because it does not contain both of the terms.}
+		\end{figure}
+		\item Multiple indexes for weighted features: it's possible to create an inverted index for specific feature of the recipes. We tested for "title", "ingredients" and "method". We can then evaluate queries weighting features as we prefer.
+		\\\\
+		Below there is an example of different weights for the same query \textit{"cheese mushroom pizza"}.
+		\begin{figure}[h]
+			\includegraphics[width=18cm, height=3.1cm]{./report_file/img/4_4_2_ex.png}\caption{Weight: Ingredients=0.2 Method=0.4 Title=0.4}
+		\end{figure}
+				\begin{figure}[h]
+			\includegraphics[width=18cm, height=3.1cm]{./report_file/img/4_4_3_ex.png}\caption{Weight: Ingredients=0.7 Method=0.1 Title=0.2}
+		\end{figure}
+	\end{itemize}
+
 
 
 
