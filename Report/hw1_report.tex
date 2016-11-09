@@ -80,6 +80,22 @@
 	P($\mathit{E}$) = "the first card isn't an ace" $\times$ "the second card isn't an ace" $\times$ "the third card isn't an ace"
 	\[ P(\bar{E}) = 1 - P(\mathit{E}) = 1 - \cfrac{48}{52} \times \cfrac{47}{51} \times \cfrac{46}{50}  = 0,217375566  \]
 	that is the probability that at least one ace appear in the first three cards
+	\\\\\\
+	Another possible solution. Let define three different events:
+	\\\\
+	$E_1$ = "Having exactly one ace within the first three cards"
+	\\
+	$E_2$ = "Having exactly two aces within the first three cards"
+	\\
+	$E_3$ = "Having exactly three aces within the first three cards"
+	\\
+	\[P(E) = P(E_1)+P(E_2)+P(E_3)\]
+	\\
+	The number of permutations in which $i$ aces are in the first three cards is the number of sets of $i$ elements of 4 (the number of aces in the deck) $\binom{4}{i}$. The remain $3-i$ cards can be picked are $\binom{48}{3-i}$. These three cards can be permuted in every order so we have to multiply for $3!$.
+	\\
+	\[P(E_i) = \cfrac{\binom{4}{i} \times \binom{48}{3-i} \times 3! \times 49!}{52!}   \]
+	\\
+	Note that each permutation of these three cards must be multiplied by the total number of permutations of the remaining cards, that are 49.
 
 	\end{adjustwidth}
 
@@ -90,6 +106,9 @@
 	\newline Each $E_i$ has the probability \[P(E_i) = \cfrac{4}{52} \times \cfrac{48}{51} \times \cfrac{47}{50} \times \cfrac{46}{49} \times \cfrac{44}{48} = 0,059894727 \]
 	\newline This formula doesn't depend on the position of the ace, in fact the latter one corresponds to $P(E_1)$ and if we invert on the numerator the factor 4 with the factor 48 then the probability corresponds to $P(E_2)$.
 	\[P(E) = P(E_1) + P(E_2) + P(E_3) + P(E_4) + P(E_5) = 5 \times P(E_i) = 5 \times 0,059894727 = 0,299473635 \]
+	\\\\
+	Note: as has been shown in the previous exercise, it is possible to compute the probability of exactly one ace within five cards as follow:
+	\[P(E_i) = \cfrac{4 \times \binom{48}{4} \times 5! \times 47!}{52!}   \]
 	\end{adjustwidth}
 
 	% 1.2.c
@@ -98,6 +117,8 @@
 	Whatever the first card is, the probability to have three cards of the same rank depends only by the second card and the third card.
 	\newline $P(E)$ = "the $2^{nd}$ card is of the same rank of the $1^{st}$ one" $\times$ "the $3^{rd}$ card is of the same rank as the $1^{st}$ and $2^{nd}$ ones"
 	\[P(E) = \cfrac{3}{51} \times \cfrac{2}{50} = 0,002352941 \]
+	\\\\
+	The
 	\end{adjustwidth}
 
 	% 1.2.d
