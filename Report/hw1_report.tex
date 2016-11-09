@@ -288,6 +288,7 @@
 	The python module that concerns about this task is  \href{run:./report_file/src/preprocess\_recipes.py}{\textit{"preprocess\_recipes.py"}}. As in the previous task, \textbf{BeautifulSoap} has been used to parse the html page of a recipe.
 
 	\clearpage
+	% 4.3
 	\subsection{Build a search-engine index and query evaluation}
 	The input of this task is a dictionary created by the output of the previous task, dictionary that has key equals to a link of the recipe and value an object of the class \href{run:./report_file/src/recipe.py}{\textit{"recipe.py"}}, that contains all the attributes we have found (eg: Chef name, preparation time, ...).
 	\\\\
@@ -343,39 +344,20 @@
 		\begin{figure}[h]
 			\includegraphics[width=18cm, height=3.1cm]{./report_file/img/4_4_2_ex.png}\caption{Weight: Ingredients=0.2 Method=0.4 Title=0.4}
 		\end{figure}
-				\begin{figure}[h]
+		\begin{figure}[h]
 			\includegraphics[width=18cm, height=3.1cm]{./report_file/img/4_4_3_ex.png}\caption{Weight: Ingredients=0.7 Method=0.1 Title=0.2}
 		\end{figure}
 	\end{itemize}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	\clearpage
+	% 4.5
+	\subsection{How run the application}
+		The application must be started by command line: just go to the directory of the project \textit{DataMining/excercise\_4 a}nd type \textit{python main.py} .
+		\\\\
+		At the beginning the application read from the disk all the files that are result from previous computation, like the crawl of the web site or the preprocess of recipes. In this phase all the default inverted indexes are read.
+		\begin{figure}[h]
+			\includegraphics[width=12cm, height=8cm]{./report_file/app/startup.png}\caption{The default indexes are \textit{"InvertedIndex"}, \textit{"index\_ingredients"}, \textit{"index\_method"}, \textit{"index\_title"}}
+		\end{figure}
 
 
 \end{document}

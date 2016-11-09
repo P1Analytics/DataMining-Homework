@@ -173,7 +173,12 @@ def read(max = None):
     '''
     num_recipe_read = 0
     stop_read = max is not None and isinstance(max, int)
-    data_file = open(getDataFilePath(recipe_file_data), "r")
+    try:
+        data_file = open(getDataFilePath(recipe_file_data), "r")
+    except IOError:
+        # File of recipes not found --> need to parse the web site
+        print "\tRecipes not found --> must be downloaded and preprocessed!"
+        return -1, {}
     diz = {}
     for line in data_file.readlines():
         num_recipe_read += 1

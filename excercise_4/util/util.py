@@ -12,3 +12,22 @@ def decode(s):
 
 def remove_separator_char(s):
     return re.sub(r'[ \t\n]+', " ", s)
+
+def rpad(s, num, c=" "):
+    if not isinstance(s, str):
+        s = str(s)
+    return s.ljust(num)
+
+def print_query_result(result, index):
+    print "\t"+rpad("Rank", 4), "|", rpad("Score", 13), "|", rpad("Title", 80), "| Link"
+    i = 1
+    for t in result:
+        print "\t"+rpad(str(i), 4), "|", rpad(t[1], 13), "|", rpad(index.recipes[t[0]].title, 80), "|", index.recipes[t[0]].link
+        i = i + 1
+
+def print_weighted_query_result(result, recipes_dic):
+    print "\t" + rpad("Rank", 4), "|", rpad("Score", 13), "|", rpad("Title", 80), "| Link"
+    i = 1
+    for t in result:
+        print "\t" + rpad(str(i), 4), "|", rpad(t[1], 13), "|", rpad(recipes_dic[t[0]].title, 80), "|", recipes_dic[t[0]].link
+        i = i + 1
