@@ -75,7 +75,7 @@ def main():
         elif user_input == "exit":
             break
         else:
-            user_input = raw_input("You can tape 1, 2, 3, 4, 5 or exit: what's your choice? ")
+            print "You can tape 1, 2, 3, 4, 5 or exit!!!"
 
         print "\n\nPress a menu key to perform the specific job"
         print_menu()
@@ -92,68 +92,7 @@ def print_menu():
 
 
 def doMyTest():
-    res, recipes_dic = data_manager.read()
-
-    res, index = data_manager.read_inverted_index(recipes_dic)
-
-    '''
-    print "ingredients"
-    res = ing.look_for("cheese mushroom pizza", 0.7, 1000)
-    h = {}
-    for t in res:
-        h[ing.recipes[t[0]].link] = float(t[1])
-    print "method"
-    res = met.look_for("cheese mushroom pizza", 0.1, 1000)
-    for t in res:
-        try:
-            h[met.recipes[t[0]].link] = h[met.recipes[t[0]].link] + (float(t[1]))
-        except Exception:
-            h[met.recipes[t[0]].link] = float(t[1])
-    print "title"
-    res = tit.look_for("cheese mushroom pizza", 0.2, 1000)
-    for t in res:
-        try:
-            h[tit.recipes[t[0]].link] = h[tit.recipes[t[0]].link] + float(t[1])
-        except Exception:
-            h[tit.recipes[t[0]].link] = float(t[1])
-
-    sorted_x = sorted(h.items(), key=operator.itemgetter(1), reverse=True)[:10]
-    i=0
-    for p in sorted_x:
-        i = i + 1
-        ind = str(i)
-        if i < 10:
-            ind = " " + str(i)
-        print ind + ")", p[1], recipes_dic[p[0]].title.ljust(69+18), recipes_dic[p[0]].link
-'''
-    i=0
-    for rec, r in recipes_dic.iteritems():
-        print rec
-        for t in index.look_for(r.__str__()):
-            i = i + 1
-            ind = str(i)
-            if i < 10:
-                ind = " " + str(i)
-
-            print ind + ")", t[1], index.recipes[t[0]].title.ljust(69 + 17), index.recipes[t[0]].link
-        break
-
-    i = 0
-    for t in index.and_query("mushroom cheese"):
-        i = i + 1
-        ind = str(i)
-        if i<10:
-            ind = " "+str(i)
-
-        print ind + ")", t[1], index.recipes[t[0]].title.ljust(69+17 ), index.recipes[t[0]].link
-
-
-    #for t in index.look_for(util.decode(index.recipes[0].__str__()),2):
-    #    print index.recipes[0].linkq
-    #    print t[1], index.recipes[t[0]].link
-
-def fill(str):
-    return str
+    pass
 
 if __name__ == "__main__":
     #doMyTest()

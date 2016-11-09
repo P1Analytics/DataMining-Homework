@@ -356,8 +356,22 @@
 		\\\\
 		At the beginning the application read from the disk all the files that are result from previous computation, like the crawl of the web site or the preprocess of recipes. In this phase all the default inverted indexes are read.
 		\begin{figure}[h]
-			\includegraphics[width=12cm, height=8cm]{./report_file/app/startup.png}\caption{The default indexes are \textit{"InvertedIndex"}, \textit{"index\_ingredients"}, \textit{"index\_method"}, \textit{"index\_title"}}
+			\includegraphics[width=12cm, height=8cm]{./report_file/app/startup.png}\caption{The default indexes are four: \textit{"InvertedIndex"}, \textit{"index\_ingredients"}, \textit{"index\_method"}, \textit{"index\_title"}.}
 		\end{figure}
+		\\\\
+		After the startup, a simple menu asks you what job you would execute.
+		\begin{figure}[h]
+			\includegraphics[width=10cm, height=3cm]{./report_file/app/menu.png}\caption{Menu of the recipe engine}
+		\end{figure}
+		\\
+		The five option below are the one explained in the previous sections.
+		\begin{enumerate}[label=\arabic*.]
+			\item Download recipes
+			\item Preprocess recipes
+			\item Create the inverted index
+			\item Query the index
+			\item Weighted Query
+		\end{enumerate}
 
 
 \end{document}
