@@ -55,7 +55,7 @@
 
 \begin{document}
 	\title{Data Mining:\\Homework 1}
-	\author{Simone Caldaro, Nana Zhu, Leonardo Martini}
+	\author{Simone Caldaro, Na Zhu, Leonardo Martini}
 
 	\maketitle
 
@@ -80,6 +80,22 @@
 	P($\mathit{E}$) = "the first card isn't an ace" $\times$ "the second card isn't an ace" $\times$ "the third card isn't an ace"
 	\[ P(\bar{E}) = 1 - P(\mathit{E}) = 1 - \cfrac{48}{52} \times \cfrac{47}{51} \times \cfrac{46}{50}  = 0,217375566  \]
 	that is the probability that at least one ace appear in the first three cards
+	\\\\\\
+	Another possible solution. Let define three different events:
+	\\\\
+	$E_1$ = "Having exactly one ace within the first three cards"
+	\\
+	$E_2$ = "Having exactly two aces within the first three cards"
+	\\
+	$E_3$ = "Having exactly three aces within the first three cards"
+	\\
+	\[P(E) = P(E_1)+P(E_2)+P(E_3)\]
+	\\
+	The number of permutations in which $i$ aces are in the first three cards is the number of sets of $i$ elements of 4 (the number of aces in the deck) $\binom{4}{i}$. The remain $3-i$ cards can be picked are $\binom{48}{3-i}$. These three cards can be permuted in every order so we have to multiply for $3!$.
+	\\
+	\[P(E_i) = \cfrac{\binom{4}{i} \times \binom{48}{3-i} \times 3! \times 49!}{52!}   \]
+	\\
+	Note that each permutation of these three cards must be multiplied by the total number of permutations of the remaining cards, that are 49.
 
 	\end{adjustwidth}
 
@@ -90,6 +106,9 @@
 	\newline Each $E_i$ has the probability \[P(E_i) = \cfrac{4}{52} \times \cfrac{48}{51} \times \cfrac{47}{50} \times \cfrac{46}{49} \times \cfrac{44}{48} = 0,059894727 \]
 	\newline This formula doesn't depend on the position of the ace, in fact the latter one corresponds to $P(E_1)$ and if we invert on the numerator the factor 4 with the factor 48 then the probability corresponds to $P(E_2)$.
 	\[P(E) = P(E_1) + P(E_2) + P(E_3) + P(E_4) + P(E_5) = 5 \times P(E_i) = 5 \times 0,059894727 = 0,299473635 \]
+	\\\\
+	Note: as has been shown in the previous exercise, it is possible to compute the probability of exactly one ace within five cards as follow:
+	\[P(E_i) = \cfrac{4 \times \binom{48}{4} \times 5! \times 47!}{52!}   \]
 	\end{adjustwidth}
 
 	% 1.2.c
@@ -98,6 +117,8 @@
 	Whatever the first card is, the probability to have three cards of the same rank depends only by the second card and the third card.
 	\newline $P(E)$ = "the $2^{nd}$ card is of the same rank of the $1^{st}$ one" $\times$ "the $3^{rd}$ card is of the same rank as the $1^{st}$ and $2^{nd}$ ones"
 	\[P(E) = \cfrac{3}{51} \times \cfrac{2}{50} = 0,002352941 \]
+	\\\\
+	The
 	\end{adjustwidth}
 
 	% 1.2.d
@@ -288,6 +309,7 @@
 	The python module that concerns about this task is  \href{run:./report_file/src/preprocess\_recipes.py}{\textit{"preprocess\_recipes.py"}}. As in the previous task, \textbf{BeautifulSoap} has been used to parse the html page of a recipe.
 
 	\clearpage
+	% 4.3
 	\subsection{Build a search-engine index and query evaluation}
 	The input of this task is a dictionary created by the output of the previous task, dictionary that has key equals to a link of the recipe and value an object of the class \href{run:./report_file/src/recipe.py}{\textit{"recipe.py"}}, that contains all the attributes we have found (eg: Chef name, preparation time, ...).
 	\\\\
@@ -331,51 +353,64 @@
 	\clearpage
 	\subsection{Extra Credit}
 	\begin{itemize}
+		% 4.4.1 customized index
+		\item Customized index: we allow user to create his own inverted index. In this way everybody can choose every features they like to have in their recipe search engine, and then querying it.
+		\begin{figure}[h]
+			\includegraphics[width=12cm, height=8cm]{./report_file/app/create_invete_index.png}\caption{In the figure above we created the customized index (\textit{"customize\_inverted\_index"}) with features \textit{"title"},\textit{"author"},\textit{"prep\_time"},\textit{"cook\_time"},\textit{"num\_people\_serves"} }.
+		\end{figure}
+		\clearpage
+		Below, an example of how the same query is evaluated on two inverted indexes. Specifically the indexes are:
+		\begin{itemize}
+			\item \textit{"index\_title"}, that is an inverted index built on only the title of recipes;
+			\item \textit{"index\_method"}, that is an inverted index built on only the method of recipes.
+		\end{itemize}
+		\begin{figure}[h]
+			\includegraphics[width=18cm, height=6cm]{./report_file/app/query_1.png}\caption{}.
+			\includegraphics[width=18cm, height=6cm]{./report_file/app/query_2.png}\caption{}.
+		\end{figure}
+		\clearpage
+		% 4.4.2 AND query
 		\item AND query: we have implemented the query evaluation that returns as output all the recipes that contain all the terms of the query. The result is ranked as ever.
 		\\\\
 		The evaluation is performed in two steps: first we get all the recipes which contain every term in query. Second, we compute the intersection between all the posting lists found at the first step.
 		\begin{figure}[h]
 			\includegraphics[width=18cm, height=3.1cm]{./report_file/img/4_4_1_ex.png}\caption{This is the ranked result of the AND-query evaluation \textit{"mushroom cheese"}. Note that the recipe in the $8^{th}$ position of Figure 2 \textit{"Mushroom stuffed with spinach, breadcrumbs, garlic and herbs"} is not returned because it does not contain both of the terms.}
 		\end{figure}
+		% 4.4.3 mult indexes
 		\item Multiple indexes for weighted features: it's possible to create an inverted index for specific feature of the recipes. We tested for "title", "ingredients" and "method". We can then evaluate queries weighting features as we prefer.
 		\\\\
 		Below there is an example of different weights for the same query \textit{"cheese mushroom pizza"}.
 		\begin{figure}[h]
 			\includegraphics[width=18cm, height=3.1cm]{./report_file/img/4_4_2_ex.png}\caption{Weight: Ingredients=0.2 Method=0.4 Title=0.4}
 		\end{figure}
-				\begin{figure}[h]
+		\begin{figure}[h]
 			\includegraphics[width=18cm, height=3.1cm]{./report_file/img/4_4_3_ex.png}\caption{Weight: Ingredients=0.7 Method=0.1 Title=0.2}
 		\end{figure}
 	\end{itemize}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	\clearpage
+	% 4.5
+	\subsection{How run the application}
+		The application must be started by command line: just go to the directory of the project \textit{DataMining/excercise\_4 a}nd type \textit{python main.py} .
+		\\\\
+		At the beginning the application read from the disk all the files that are result from previous computation, like the crawl of the web site or the preprocess of recipes. In this phase all the default inverted indexes are read.
+		\begin{figure}[h]
+			\includegraphics[width=12cm, height=8cm]{./report_file/app/startup.png}\caption{The default indexes are four: \textit{"InvertedIndex"}, \textit{"index\_ingredients"}, \textit{"index\_method"}, \textit{"index\_title"}.}
+		\end{figure}
+		\\\\
+		After the startup, a simple menu asks you what job you would execute.
+		\begin{figure}[h]
+			\includegraphics[width=10cm, height=3cm]{./report_file/app/menu.png}\caption{Menu of the recipe engine}
+		\end{figure}
+		\\
+		The five option below are the one explained in the previous sections.
+		\begin{enumerate}[label=\arabic*.]
+			\item Download recipes
+			\item Preprocess recipes
+			\item Create the inverted index
+			\item Query the index
+			\item Weighted Query
+		\end{enumerate}
 
 
 \end{document}

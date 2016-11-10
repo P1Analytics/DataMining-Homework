@@ -2,6 +2,7 @@
 import os
 import io
 import time
+import shutil       # used to copy file
 
 from excercise_4.domain.recipe import Recipe
 from excercise_4.domain.inverted_index import InvertedIndex
@@ -173,7 +174,12 @@ def read(max = None):
     '''
     num_recipe_read = 0
     stop_read = max is not None and isinstance(max, int)
-    data_file = open(getDataFilePath(recipe_file_data), "r")
+    try:
+        data_file = open(getDataFilePath(recipe_file_data), "r")
+    except IOError:
+        # File of recipes not found --> need to parse the web site
+        print "\tRecipes not found --> must be downloaded and preprocessed!"
+        return -1, {}
     diz = {}
     for line in data_file.readlines():
         num_recipe_read += 1
@@ -197,6 +203,14 @@ def read(max = None):
         diz[rec.link] = rec
     data_file.close()
     return 0, diz
+
+def restore_backup():
+    backup_path = data_path+"/backup"
+    for src in os.listdir(backup_path):
+        if src.endswith(".tsv"):
+            shutil.copy(backup_path+"/"+src, data_path)
+        else:
+            continue
 
 
 def save_error_pages(**error_pages):

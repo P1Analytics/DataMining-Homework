@@ -43,7 +43,7 @@ class InvertedIndex(object):
         # if the query contains special characters (eg 'è',..) --> convert it in ASCII code
         if isinstance(query, str) is True:
             query = util.decode(query)
-        print "Query processing > look for ["+query+"]"
+        print "Query processing with index [ "+self.name+" ] > look for ["+query+"]"
 
         # tokenization of the query
         for term in {t.lower() for t in nltk.word_tokenize(query)}:
