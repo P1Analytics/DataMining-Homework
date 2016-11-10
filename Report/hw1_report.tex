@@ -55,7 +55,7 @@
 
 \begin{document}
 	\title{Data Mining:\\Homework 1}
-	\author{Simone Caldaro, Nana Zhu, Leonardo Martini}
+	\author{Simone Caldaro, Na Zhu, Leonardo Martini}
 
 	\maketitle
 
@@ -353,12 +353,30 @@
 	\clearpage
 	\subsection{Extra Credit}
 	\begin{itemize}
+		% 4.4.1 customized index
+		\item Customized index: we allow user to create his own inverted index. In this way everybody can choose every features they like to have in their recipe search engine, and then querying it.
+		\begin{figure}[h]
+			\includegraphics[width=12cm, height=8cm]{./report_file/app/create_invete_index.png}\caption{In the figure above we created the customized index (\textit{"customize\_inverted\_index"}) with features \textit{"title"},\textit{"author"},\textit{"prep\_time"},\textit{"cook\_time"},\textit{"num\_people\_serves"} }.
+		\end{figure}
+		\clearpage
+		Below, an example of how the same query is evaluated on two inverted indexes. Specifically the indexes are:
+		\begin{itemize}
+			\item \textit{"index\_title"}, that is an inverted index built on only the title of recipes;
+			\item \textit{"index\_method"}, that is an inverted index built on only the method of recipes.
+		\end{itemize}
+		\begin{figure}[h]
+			\includegraphics[width=18cm, height=6cm]{./report_file/app/query_1.png}\caption{}.
+			\includegraphics[width=18cm, height=6cm]{./report_file/app/query_2.png}\caption{}.
+		\end{figure}
+		\clearpage
+		% 4.4.2 AND query
 		\item AND query: we have implemented the query evaluation that returns as output all the recipes that contain all the terms of the query. The result is ranked as ever.
 		\\\\
 		The evaluation is performed in two steps: first we get all the recipes which contain every term in query. Second, we compute the intersection between all the posting lists found at the first step.
 		\begin{figure}[h]
 			\includegraphics[width=18cm, height=3.1cm]{./report_file/img/4_4_1_ex.png}\caption{This is the ranked result of the AND-query evaluation \textit{"mushroom cheese"}. Note that the recipe in the $8^{th}$ position of Figure 2 \textit{"Mushroom stuffed with spinach, breadcrumbs, garlic and herbs"} is not returned because it does not contain both of the terms.}
 		\end{figure}
+		% 4.4.3 mult indexes
 		\item Multiple indexes for weighted features: it's possible to create an inverted index for specific feature of the recipes. We tested for "title", "ingredients" and "method". We can then evaluate queries weighting features as we prefer.
 		\\\\
 		Below there is an example of different weights for the same query \textit{"cheese mushroom pizza"}.

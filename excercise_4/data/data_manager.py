@@ -2,6 +2,7 @@
 import os
 import io
 import time
+import shutil       # used to copy file
 
 from excercise_4.domain.recipe import Recipe
 from excercise_4.domain.inverted_index import InvertedIndex
@@ -202,6 +203,14 @@ def read(max = None):
         diz[rec.link] = rec
     data_file.close()
     return 0, diz
+
+def restore_backup():
+    backup_path = data_path+"/backup"
+    for src in os.listdir(backup_path):
+        if src.endswith(".tsv"):
+            shutil.copy(backup_path+"/"+src, data_path)
+        else:
+            continue
 
 
 def save_error_pages(**error_pages):
