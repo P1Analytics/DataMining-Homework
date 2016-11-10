@@ -356,7 +356,7 @@
 		% 4.4.1 customized index
 		\item Customized index: we allow user to create his own inverted index. In this way everybody can choose every features they like to have in their recipe search engine, and then querying it.
 		\begin{figure}[h]
-			\includegraphics[width=12cm, height=8cm]{./report_file/app/create_invete_index.png}\caption{In the figure above we created the customized index (\textit{"customize\_inverted\_index"}) with features \textit{"title"},\textit{"author"},\textit{"prep\_time"},\textit{"cook\_time"},\textit{"num\_people\_serves"} }.
+			\includegraphics[width=18cm, height=12cm]{./report_file/app/create_invete_index.png}\caption{In the figure above we created the customized index (\textit{"customize\_inverted\_index"}) with features \textit{"title"},\textit{"author"},\textit{"prep\_time"},\textit{"cook\_time"},\textit{"num\_people\_serves"} }.
 		\end{figure}
 		\clearpage
 		Below, an example of how the same query is evaluated on two inverted indexes. Specifically the indexes are:
@@ -390,7 +390,7 @@
 
 	\clearpage
 	% 4.5
-	\subsection{How run the application}
+	\subsection{How to run the application}
 		The application must be started by command line: just go to the directory of the project \textit{DataMining/excercise\_4 a}nd type \textit{python main.py} .
 		\\\\
 		At the beginning the application read from the disk all the files that are result from previous computation, like the crawl of the web site or the preprocess of recipes. In this phase all the default inverted indexes are read.
@@ -399,17 +399,16 @@
 		\end{figure}
 		\\\\
 		After the startup, a simple menu asks you what job you would execute.
-		\begin{figure}[h]
-			\includegraphics[width=10cm, height=3cm]{./report_file/app/menu.png}\caption{Menu of the recipe engine}
-		\end{figure}
 		\\
-		The five option below are the one explained in the previous sections.
+		The seven options below are the one explained in the previous sections.
 		\begin{enumerate}[label=\arabic*.]
 			\item Download recipes
 			\item Preprocess recipes
 			\item Create the inverted index
 			\item Query the index
 			\item Weighted Query
+			\item AND Query
+			\item Restore default indexes
 		\end{enumerate}
 
 
