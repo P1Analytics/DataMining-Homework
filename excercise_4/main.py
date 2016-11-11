@@ -148,6 +148,9 @@ def main():
         print_menu()
         user_input = raw_input("What's your choice? ")
 
+    print "*** Application terminated with success***"
+    return 0
+
 
 def choose_index(index_dic_name):
     while True:
