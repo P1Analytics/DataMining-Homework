@@ -41,10 +41,8 @@ def b__exactly_one_ace_over_five_cards(naive=0):
         return float(cnt) / float(len(res))
     elif naive == 0.5:
         ''' semi naive --> just count in a smart way '''
-
         ace = util.getAces()[0]
         res = []
-
         util.getFirstXCards(4, res, [ace])
         cnt = 0;
         for r in res:
@@ -61,11 +59,39 @@ def b__exactly_one_ace_over_five_cards(naive=0):
                 . the permutation of the reamins card '''
         return float((4 * util.get_combination(48, 4) * util.fact(5) * util.fact(47)))/float(util.fact(52))
 
+
+def d__flush_over_five_cards():
+    # compute the size of the permutation when the first five card are diamond
+    # number of permutation with 5 generic cards
+    res = []
+    util.getFirstXCards(5, res, [], "d")
+    return float(len(res))/float(util.get_combination(52,5)*util.fact(5))
+
+def e__full_house_over_five_cards(naive=0):
+    if naive == 1:
+        res = []
+        util.getFirstXCards(5, res)
+        cnt = 0;
+        for r in res:
+            if util.is_full_house(r):
+                cnt+=1
+        return float(cnt) / float(len(res))
+    if naive == 0.5:
+        res = []
+        util.getFirstXCards(5, res)
+        cnt = 0;
+        for r in res:
+            if util.is_full_house(r):
+                cnt+=1
+        return float(cnt) / float(len(res))
+
+
+
 print "Probability to have at least one ace over three cards is", a__at_least_one_ace_over_three_cards()
-#print "Probability to have exactly one ace over five cards is", b__exactly_one_ace_over_five_cards(0.5)
-print "Probability to have exactly one ace over five cards is", b__exactly_one_ace_over_five_cards()
+print "Probability to have exactly one ace over five cards is", b__exactly_one_ace_over_five_cards(0.5)
+#print "Probability to have exactly one ace over five cards is", b__exactly_one_ace_over_five_cards()
 print "Probability to have a tris over three cards is", c__tris_over_three_cards()
-# d TODO
-# e TODO
+print "Probability to have five diamond cards within the first five cards", d__flush_over_five_cards()
+print "Probability to have a full house within the first five cards", e__full_house_over_five_cards(1)
 
 
