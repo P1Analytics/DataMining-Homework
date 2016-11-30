@@ -1,4 +1,5 @@
 import hashlib
+import struct
 
 def hashFamily(i=0):
     '''
@@ -10,6 +11,14 @@ def hashFamily(i=0):
     resultSize = 8      # how many bytes we want back
     maxLen = 20         # how long can our i be (in decimal)
     salt = str(i).zfill(maxLen)[-maxLen:]
+
     def hashMember(x):
-        return hashlib.sha1(x + salt).digest()[-resultSize:]
+        '''
+        Return an integer number of 64bit length, that is the hash of the shingle
+        The hash function used is always the same!
+        :param x:
+        :return:
+        '''
+        return struct.unpack("Q", hashlib.sha1(x + salt).digest()[-resultSize:])[0]
+
     return hashMember
