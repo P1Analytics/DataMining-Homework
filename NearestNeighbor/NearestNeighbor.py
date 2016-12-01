@@ -2,8 +2,10 @@
 
 import time
 import shingle
+import similarity
 
 from signature_matrix import SignatureMatrix
+
 def main():
 
     recipes = get_documents()
@@ -18,38 +20,13 @@ def main():
             recipe_shingle_diz[link] = shingles
 
     # 2 create the signature matrix
-
-
-    M = SignatureMatrix(250)
+    M = SignatureMatrix(100)
     M.add_sets(recipe_shingle_diz)
     M.create_signature_matrix(recipe_shingle_diz)
     #M.store()
     #M.print_signatures()
 
-    b_r = [(75,3), (60,4), (50,5), (40,6), (35,7), (30,8), (25,10), (20,12), (15,15)]
-    for b,r in b_r:
-        start = time.time()
-        print "Elaborating b:",b," r:",r,"..."
-        for i in range(len(M.document_set)):
-            j = i + 1
-            while j < len(M.document_set):
-                for b_i in range(b):
-                    band_i = M.get_signature(M.document_set[i], b_i, r)
-                    band_j = M.get_signature(M.document_set[j], b_i, r)
-
-                    are_similar = False
-                    for r_i in range(r):
-                        are_similar = False
-                        if band_i[r_i] != band_j[r_i]:
-                            break
-                        are_similar = True
-                    if are_similar:
-                        print "Find two element similar:",M.document_set[i],"and",M.document_set[j]
-                        print "\tTheir Jaccard Similarity is", jaccard_similarity(recipe_shingle_diz[M.document_set[i]],recipe_shingle_diz[M.document_set[j]])
-                        break
-                j += 1
-        print "...Finished in",time.time()-start,"seconds"
-
+    similarity.find(M, recipe_shingle_diz)
 
 def jaccard_similarity(a, b):
     a = {i for i in a}
@@ -62,7 +39,7 @@ def jaccard_similarity(a, b):
 
 def get_documents():
     from excercise_4.data import data_manager
-    res, diz = data_manager.read(10)
+    res, diz = data_manager.read()
 
     #diz = {}
     #diz[0] = "We have to implement è this nearest neighbour and test it in the recipe engine. What do you think if we develope a sort of python module fon NN, that can be easily è tested, and once it has been developed we can test it on the application of recipe engine (importing him as a library)?"
