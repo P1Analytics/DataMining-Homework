@@ -1,13 +1,16 @@
 import hash
 import nltk
-import struct
+from nltk.stem.snowball import EnglishStemmer
+
 
 '''
  1. Implement a class that, given a document, creates its set of character shingles of some length k.
     Then represent the document as the set of the hashes of the shingles, for some hash function.
 '''
 
-def get_shingles(document, k=8, filter_stopword=False, filter_punctuation=False):
+stemmer = EnglishStemmer()
+
+def get_shingles(document, k=8, filter_stopword=False, filter_punctuation=False, stemming=False):
     '''
     the object returned is a dictionary with:
         - key: the hash of the shingles
@@ -18,12 +21,13 @@ def get_shingles(document, k=8, filter_stopword=False, filter_punctuation=False)
     :param filter_punctuation: if true punctuation is not considered
     :return: the set of shingles of size k
     '''
-    print "SHINGLE > get_shingle ..."
+    #print "SHINGLE > get_shingle ..."
     stopwords = []
     if filter_stopword:
         stopwords = nltk.corpus.stopwords.words('english')
     if filter_punctuation:
         stopwords.append(",")
+        stopwords.append(":")
         stopwords.append(".")
         stopwords.append("?")
         stopwords.append("|")
@@ -46,6 +50,10 @@ def get_shingles(document, k=8, filter_stopword=False, filter_punctuation=False)
         if token in stopwords:
             # not consider this token
             continue
+
+        if stemming:
+            token = stemmer.stem(token)
+
         for i in range(k):
             if cnt%k==i:
                 if cnt>=k and current_shingles[i][:-1] not in shingles:
@@ -58,7 +66,7 @@ def get_shingles(document, k=8, filter_stopword=False, filter_punctuation=False)
         if cnt % k == i:
             if cnt >= k and current_shingles[i][:-1] not in shingles:
                 shingles.append(current_shingles[i][:-1])
-    return shingles
+    return len(shingles), shingles
 
 def hash_shingle(shingle):
     '''
