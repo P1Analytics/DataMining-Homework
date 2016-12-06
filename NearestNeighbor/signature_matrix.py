@@ -42,6 +42,7 @@ class SignatureMatrix(object):
 
     def add_sets(self, sets):
         print "\nCHARACTERISTIC_MATRIX :: add_sets "
+        start = time.time()
         cnt = 0
         percent = 0
         for set_id, set_elements in sets.iteritems():
@@ -51,8 +52,11 @@ class SignatureMatrix(object):
                 percent+=1
                 cnt = 0
             self.add_set(set_id, set_elements)
-        print "\n\n\tNumber of different elements:", len(self.row)
-        print "CHARACTERISTIC_MATRIX :: add_sets --> DONE"
+
+        self.elements.clear()       # delete the temp dictionary
+        print "\tCHARACTERISTIC_MATRIX :: add_sets > Universe size:", len(self.row)
+        print "\tCHARACTERISTIC_MATRIX :: add_sets > Number of sets:", len(self.document_set)
+        print "CHARACTERISTIC_MATRIX :: add_sets --> DONE in:", time.time() - start, "seconds"
 
     def add_set(self, set_id, set_elements):
         print "CHARACTERISTIC_MATRIX :: add_set [ "+str(set_id)+" ]"
@@ -79,8 +83,6 @@ class SignatureMatrix(object):
         start = time.time()
         for r in range(self.offset, n_row):
             self.random_row_permutation[self.row[r]] = []
-        #for r in self.row:
-        #    self.random_row_permutation[r] = []
         print "\tInitialization random permutation in:", time.time() - start, "seconds"
 
 
@@ -101,27 +103,27 @@ class SignatureMatrix(object):
                 h_i += 3
 
                 r = self.row[i]
-                self.random_row_permutation[r].append(hash_0(str(r.encode("utf-8"))))
-                self.random_row_permutation[r].append(hash_1(str(r.encode("utf-8"))))
-                self.random_row_permutation[r].append(hash_2(str(r.encode("utf-8"))))
+                self.random_row_permutation[r].append(hash_0(str(r)))
+                self.random_row_permutation[r].append(hash_1(str(r)))
+                self.random_row_permutation[r].append(hash_2(str(r)))
 
                 r = self.row[i+1]
-                self.random_row_permutation[r].append(hash_0(str(r.encode("utf-8"))))
-                self.random_row_permutation[r].append(hash_1(str(r.encode("utf-8"))))
-                self.random_row_permutation[r].append(hash_2(str(r.encode("utf-8"))))
+                self.random_row_permutation[r].append(hash_0(str(r)))
+                self.random_row_permutation[r].append(hash_1(str(r)))
+                self.random_row_permutation[r].append(hash_2(str(r)))
 
                 r = self.row[i+2]
-                self.random_row_permutation[r].append(hash_0(str(r.encode("utf-8"))))
-                self.random_row_permutation[r].append(hash_1(str(r.encode("utf-8"))))
-                self.random_row_permutation[r].append(hash_2(str(r.encode("utf-8"))))
+                self.random_row_permutation[r].append(hash_0(str(r)))
+                self.random_row_permutation[r].append(hash_1(str(r)))
+                self.random_row_permutation[r].append(hash_2(str(r)))
 
             while h_i < self.n_hash_functions:
                 r = self.row[i]
-                self.random_row_permutation[r].append(self.hash_functions[h_i](str(r.encode("utf-8"))))
+                self.random_row_permutation[r].append(self.hash_functions[h_i](str(r)))
                 r = self.row[i + 1]
-                self.random_row_permutation[r].append(self.hash_functions[h_i](str(r.encode("utf-8"))))
+                self.random_row_permutation[r].append(self.hash_functions[h_i](str(r)))
                 r = self.row[i + 2]
-                self.random_row_permutation[r].append(self.hash_functions[h_i](str(r.encode("utf-8"))))
+                self.random_row_permutation[r].append(self.hash_functions[h_i](str(r)))
 
                 h_i += 1
 
@@ -130,7 +132,7 @@ class SignatureMatrix(object):
         while i<n_row:
             r = self.row[i]
             for h_i in range(self.n_hash_functions):
-                self.random_row_permutation[r].append(self.hash_functions[h_i](str(r.encode("utf-8"))))
+                self.random_row_permutation[r].append(self.hash_functions[h_i](str(r)))
             i+=1
         print "\tRandom permutation computed in:", time.time() - start, "seconds"
         print "CHARACTERISTIC_MATRIX :: compute_h --> DONE"
@@ -145,6 +147,7 @@ class SignatureMatrix(object):
 
         self.compute_h()    # compute hash for every element of the set
 
+        start = time.time()
         print "\nCHARACTERISTIC_MATRIX :: create_signature_matrix"
         cnt = 0
         percent = 0
@@ -154,15 +157,15 @@ class SignatureMatrix(object):
                 percent += 1
                 cnt = 0
                 print "\t\t", percent, "% ..."
-            print "\tElaborating document:",document_id
+            print "\tCreating signature for set:",document_id
             self.signature_matrix[document_id] = [None for x in range(self.n_hash_functions)]
             for i in range(self.n_hash_functions):
                 for r in shingles:
                     h_i = self.random_row_permutation[r][i]
                     if self.signature_matrix[document_id][i] is None or self.signature_matrix[document_id][i]>h_i:
                         self.signature_matrix[document_id][i] = h_i
-
-        print "CHARACTERISTIC_MATRIX :: DONE"
+        print "\nCHARACTERISTIC_MATRIX :: create_signature_matrix > Number signatures created:", len(self.signature_matrix),"| Signature length:", self.n_hash_functions
+        print "\tCHARACTERISTIC_MATRIX :: create_signature_matrix computed in:", time.time() - start, "seconds"
 
     def print_signatures(self):
         for document_id, signature in self.signature_matrix.iteritems():
@@ -176,6 +179,10 @@ class SignatureMatrix(object):
                 return r
 
     def read_existing_data(self):
+        '''
+        DEPRECATED
+        :return:
+        '''
         print "READ EXISTING HASHES..."
 
         print "\tread shingles..."
@@ -213,6 +220,10 @@ class SignatureMatrix(object):
         return len(self.row)
 
     def store(self):
+        '''
+        DEPRECATED
+        :return:
+        '''
         print "STORE NEW HASHES"
         matrix_file_path = os.path.dirname(os.path.abspath(__file__))+"/data/signature_matrix.tsv"
         matrix_signature_file = io.FileIO(matrix_file_path, "a")

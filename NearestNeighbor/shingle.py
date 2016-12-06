@@ -1,5 +1,6 @@
 import hash
 import nltk
+import time
 from nltk.stem.snowball import EnglishStemmer
 
 
@@ -34,6 +35,7 @@ def get_shingles(documents, shingle_size=8, word_shingle=False, filter_stopword=
 
     cnt = 0
     percent = 0
+    start = time.time()
     for doc_id, document in documents.iteritems():
         cnt += 1
         if cnt >= len(documents) / 100.:
@@ -47,7 +49,7 @@ def get_shingles(documents, shingle_size=8, word_shingle=False, filter_stopword=
         n_shingles, shingles = get_document_shingles(document, k=shingle_size, word_shingle=word_shingle, stopwords=stopwords, stemming=stemming)
         if n_shingles > 0:
             shingle_diz[doc_id] = shingles
-
+    print "\tSHINGLE :: get_shingles computed in:", time.time() - start, "seconds"
     return shingle_diz
 
 def get_document_shingles(document, k=8, word_shingle=False, stopwords=[], stemming=False):
@@ -94,7 +96,7 @@ def get_document_shingles(document, k=8, word_shingle=False, stopwords=[], stemm
             if cnt >= k and current_shingles[i][:-1] not in shingles:
                 shingles.append(current_shingles[i][:-1])
 
-    return len(shingles), shingles
+    return len(shingles), [hash.hashFamily()(x.encode("utf8")) for x in shingles] #shingles
 
 
 def fill_shingle(c, cnt, current_shingles, k, shingles):
@@ -116,13 +118,3 @@ def fill_shingle(c, cnt, current_shingles, k, shingles):
         current_shingles[i] += c
     cnt += 1
     return cnt
-
-
-def hash_shingle(shingle):
-    '''
-    :param shingle:
-    :return:
-    '''
-    h = hash.hashFamily()
-    return h(shingle)
-    #return struct.unpack("Q", h(shingle))[0]
