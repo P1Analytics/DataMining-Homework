@@ -1,8 +1,0 @@
-<code_scheme name="Default (1)">
-  <codeStyleSettings language="Python">
-    <option name="SPACE_AROUND_ADDITIVE_OPERATORS" value="false" />
-    <option name="SPACE_AFTER_COMMA" value="false" />
-    <option name="SPACE_WITHIN_METHOD_PARENTHESES" value="true" />
-    <option name="SPACE_BEFORE_METHOD_PARENTHESES" value="true" />
-  </codeStyleSettings>
-</code_scheme>
