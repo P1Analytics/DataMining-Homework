@@ -11,7 +11,7 @@ from nltk.stem.snowball import EnglishStemmer
 
 stemmer = EnglishStemmer()
 
-def get_shingles(documents, shingle_size=8, word_shingle=False, filter_stopword=False, filter_punctuation=False, stemming=False):
+def get_shingles(documents, shingle_size=8, word_shingle=False, filter_stopword=False, filter_punctuation=False, stemming=False, b=None, r=None):
     print "1) SHINGLE :: get_shingles"
     print "\t"
     shingle_diz = {}
@@ -96,7 +96,7 @@ def get_document_shingles(document, k=8, word_shingle=False, stopwords=[], stemm
             if cnt >= k and current_shingles[i][:-1] not in shingles:
                 shingles.append(current_shingles[i][:-1])
 
-    return len(shingles), [hash.hashFamily()(x.encode("utf8")) for x in shingles] #shingles
+    return len(shingles), set([hash.hashFamily()(x.encode("utf8")) for x in shingles]) #shingles
 
 
 def fill_shingle(c, cnt, current_shingles, k, shingles):

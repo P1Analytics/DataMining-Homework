@@ -2,21 +2,9 @@ import hash
 import math
 import time
 
-b_r = [(25, 1), (15, 1), (10, 1), (20, 3), (5, 1), (4,1), (3, 1), (5, 2), (5, 3), (1, 1)]
+def find(b, r, signature_matrix, sets, threshold=0.8):
 
-def find(signature_matrix, sets, threshold=0.8):
-
-    # matrix_b_r = []
-    # for b,r in b_r:
-    #     factor = int(math.sqrt(signature_matrix.n_hash_functions/(b*r)))
-    #     if factor == 0:
-    #         continue
-    #     curr_threshold = math.pow((1. / float(b*factor)), 1. / float(r*factor))
-    #     if curr_threshold < threshold - 0.1*(threshold):
-    #         continue
-    #     matrix_b_r.append((b*factor, r*factor))
-
-    matrix_b_r = [(20,5), (10,10), (25,4), (30,3)]
+    matrix_b_r = [(b, r)]
     bucket = {}
     for b,r in matrix_b_r:
         if b==0 or r==0:
@@ -79,8 +67,6 @@ def find(signature_matrix, sets, threshold=0.8):
     print "...Finished in", time.time() - start, "seconds"
 
 def jaccard_similarity(a, b):
-    a = set(a)
-    b = set(b)
     intersection = a & b
     union = a
     union = union.union(b)
